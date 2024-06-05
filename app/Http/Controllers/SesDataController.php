@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SesDataFormRequest;
 use App\Models\SesData;
 use Illuminate\Http\Request;
 
@@ -20,15 +21,15 @@ class SesDataController extends Controller
      */
     public function create()
     {
-        //
+        return view('ses.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SesDataFormRequest $request)
     {
-        //
+        $this->sesDataService->store($request->all());
     }
 
     /**
