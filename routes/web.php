@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CashManagementController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SesDataController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,6 +20,9 @@ Route::middleware('auth')->group(function () {
     
     //CM表
     Route::resource('cm', CashManagementController::class);
+    
+    //SES
+    Route::resource('ses', SesDataController::class);
 });
 
 require __DIR__.'/auth.php';
