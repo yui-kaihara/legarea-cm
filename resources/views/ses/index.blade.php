@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">SES 案件一覧</x-slot>
-    
+
 @if (session('flash_message'))
     <p class="px-4 py-3 bg-blue-100 text-blue-600 text-center font-semibold text-sm md:text-base">
         {{ session('flash_message') }}
@@ -25,17 +25,19 @@
                 </tr>
             </thead>
             <tbody>
+
+@foreach ($sesDatas as $sesData)
                 <tr>
-                    <td class="w-32 py-3 px-1">CompanyA</td>
-                    <td class="w-56 py-3 px-1">案件1</td>
-                    <td class="w-32 py-3 px-1">田中</td>
-                    <td class="w-32 py-3 px-1">稼働中</td>
+                    <td class="w-32 py-3 px-1">{{ $sesData->company_name }}</td>
+                    <td class="w-56 py-3 px-1">{{ $sesData->case_name }}</td>
+                    <td class="w-32 py-3 px-1">{{ $sesData->personnel_name }}</td>
+                    <td class="w-32 py-3 px-1">{{ $sesData->status }}</td>
                     <td class="w-40 py-3 px-1">
                         <div class="flex items-center gap-0.5 text-xs">
-                            <a href="" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
+                            <a href="{{ route('ses.show', [$sesData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
                                 詳細
                             </a>
-                            <a href="" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
+                            <a href="{{ route('ses.edit', [$sesData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
                                 編集
                             </a>
                             <form action="" method="post">
@@ -46,6 +48,7 @@
                         </div>
                     </td>
                 </tr>
+@endforeach
             </tbody>
         </table>
     </div>

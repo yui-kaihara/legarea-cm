@@ -28,7 +28,8 @@ class SesDataController extends Controller
      */
     public function index()
     {
-        return view('ses.index');
+        $sesDatas = $this->sesDataService->getList();
+        return view('ses.index')->with('sesDatas', $sesDatas);
     }
 
     /**
@@ -62,19 +63,28 @@ class SesDataController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 編集画面表示
+     * 
+     * @param int $id
+     * @return Illuminate\View\View
      */
-    public function edit(SesData $sesData)
+    public function edit(int $id)
     {
-        //
+        $sesData = $this->sesDataService->getDetail($id);
+        return view('ses.edit')->with('sesData', $sesData);
     }
 
     /**
-     * Update the specified resource in storage.
+     * 更新処理
+     * 
+     * @param SesDataFormRequest $request
+     * @param int $id
+     * @return Illuminate\View\View
      */
-    public function update(Request $request, SesData $sesData)
+    public function update(SesDataFormRequest $request, int $id)
     {
-        //
+        $this->sesDataService->update($request->all(), $id);
+        return redirect(route('ses.index'))->with('flash_message', '更新が完了しました。');
     }
 
     /**
