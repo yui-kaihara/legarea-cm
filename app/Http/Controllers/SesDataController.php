@@ -4,12 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SesDataFormRequest;
 use App\Models\SesData;
+use App\Services\SesDataService;
 use Illuminate\Http\Request;
 
 class SesDataController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * コンストラクタ
+     * 
+     * @param SesDataService $sesDataService
+     */
+    public function __construct(
+        SesDataService $sesDataService
+    )
+    {
+        $this->sesDataService = $sesDataService;
+    }
+
+    /**
+     * 一覧表示
+     * 
+     * @return Illuminate\View\View
      */
     public function index()
     {
@@ -17,7 +32,9 @@ class SesDataController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 登録画面表示
+     * 
+     * @return Illuminate\View\View
      */
     public function create()
     {
@@ -25,11 +42,15 @@ class SesDataController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 保存処理
+     * 
+     * @param SesDataFormRequest $request
+     * @return Illuminate\View\View
      */
     public function store(SesDataFormRequest $request)
     {
         $this->sesDataService->store($request->all());
+        return redirect(route('ses.index'))->with('flash_message', '登録が完了しました。');
     }
 
     /**

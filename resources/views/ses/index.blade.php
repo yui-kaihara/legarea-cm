@@ -1,6 +1,12 @@
 <x-app-layout>
     <x-slot name="header">SES 案件一覧</x-slot>
     
+@if (session('flash_message'))
+    <p class="px-4 py-3 bg-blue-100 text-blue-600 text-center font-semibold text-sm md:text-base">
+        {{ session('flash_message') }}
+    </p>
+@endif
+    
     <div class="w-1/2 mx-auto py-10">
         <div class="flex justify-end mb-3">
             <a href="{{ route('ses.create') }}" class="flex items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none no-underline">

@@ -22,18 +22,17 @@ class SesDataFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'companyName' => ['required'],
-            'caseName' => ['required'],
-            'personnelName' => ['required'],
-            'depositAmount' => ['required'],
-            'paymentSite' => ['required'],
-            'depositIrregular' => ['required'],
-            'depositBank' => ['required'],
-            'withdrawalAmount' => ['required'],
-            'withdrawalDate' => ['required'],
-            'withdrawalIrregular' => ['required'],
-            'withdrawalBank' => ['required'],
-            'admissionDate' => ['required']
+            'company_name' => ['required'],
+            'case_name' => ['required'],
+            'personnel_name' => ['required'],
+            'deposit_amount' => ['required_without_all:deposit_amount, withdrawal_amount'],
+            'payment_site' => ['required_with:deposit_amount'],
+            'deposit_irregular' => ['required_with:deposit_amount'],
+            'deposit_bank' => ['required_with:deposit_amount'],
+            'withdrawal_date' => ['required_with:withdrawal_amount'],
+            'withdrawal_irregular' => ['required_with:withdrawal_amount'],
+            'withdrawal_bank' => ['required_with:withdrawal_amount'],
+            'admission_date' => ['required']
         ];
     }
     
@@ -45,7 +44,9 @@ class SesDataFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'required' => '必須項目です'
+            'required' => '入力必須です',
+            'required_without_all' => '入金・出金どちらかは入力必須です',
+            'required_with' => '入力必須です'
         ];
     }
 }
