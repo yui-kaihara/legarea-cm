@@ -54,4 +54,16 @@ class SesDataService
         $sesData = SesData::find($id);
         $sesData->fill($requests)->save();
     }
+    
+    /**
+     * 削除処理
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function destroy(int $id)
+    {
+        $sesData = SesData::find($id);
+        $sesData->delete();
+    }
 }

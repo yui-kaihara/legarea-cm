@@ -42,7 +42,7 @@ $status = config('status');
                             <a href="{{ route('ses.edit', [$sesData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
                                 編集
                             </a>
-                            <form action="" method="post">
+                            <form action="{{ route('ses.destroy', [$sesData]) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <input type="submit" value="削除" onclick="return confirm('本当に削除しますか？')" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow cursor-pointer" />

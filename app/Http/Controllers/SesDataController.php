@@ -91,10 +91,13 @@ class SesDataController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 削除処理
+     * 
+     * @param int $id
      */
-    public function destroy(SesData $sesData)
+    public function destroy(int $id)
     {
-        //
+        $this->sesDataService->destroy($id);
+        return redirect(route('ses.index'))->with('flash_message', '削除が完了しました。');
     }
 }
