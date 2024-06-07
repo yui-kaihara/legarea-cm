@@ -115,10 +115,11 @@ class SesData extends Model
      */
     public function getLastPaymentDay()
     {
-         //支払予定日
+        //支払予定日
         $scheduleDay = $this->payment_site ? config('paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
-        $scheduleDay = new DateTime($this->exit_date->modify('+1 month').'-'.$scheduleDay);
+        $scheduleDay = new DateTime($this->exit_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
 
+        //支払いサイト30日の場合
         if ($this->payment_site == 1) {
             
             //支払予定日（月の最終日）
@@ -134,43 +135,49 @@ class SesData extends Model
     /*
      * ステータス取得
      * 
-     * @return string
+     * @return int
      */
     public function getStatusAttribute()
     {
         //現在
         $now = new DateTime(now()->format('Y-m-d'));
-        
+
         //入場日
         $admissionDate = new DateTime($this->admission_date);
         
         //ステータスを設定
-        $status = '稼働予定';
-        
+        $status = 1;
+
         //入場日を過ぎた場合
         if ($now >= $admissionDate) {
-            $status = '稼働中';
+            $status = 2;
 
             //退場日が設定されている場合
             if ($this->exit_date) {
 
                 //退場日
                 $exitDate = new DateTime($this->exit_date);
-
-                //退場日までの残り日数を算出
-                $limit = $exitDate->diff($now)->days;
+                
+                if ($now <= $exitDate) {
+                    
+                    //退場日までの残り日数を算出
+                    $limit = $exitDate->diff($now)->days;
     
-                //残り1か月以内の場合
-                if (($limit <= 31) && ($limit >= 0)) {
-                    $status = '退場予定';
-                    
+                    //残り1か月以内の場合
+                    if (($limit <= 31) && ($limit >= 0)) {
+                        $status = 3;
+                    }
+                
                 //退場日を過ぎた場合
-                } elseif ($limit < 0) {
-                    $status = '退場';
-                    
+                } else {
+                    $status = 4;
+
+                    //最終支払日を取得
                     $lastPaymentDay = $this->getLastPaymentDay();
+                    
+                    //最終支払日を過ぎた場合
                     if ($now > $lastPaymentDay) {
-                        $status = '完全退場';
+                        $status = 5;
                     }
                 }
             }
@@ -188,20 +195,25 @@ class SesData extends Model
      */
     public function getBusinessDay(DateTime $date, array $holidays)
     {
+        //営業日を設定
         $businessDay = $date;
 
         while (true) {
+            
+            //曜日を取得
             $week = (int)$date->format('w');
 
             //土日以外
-            if ($week > 0 && $week < 6) {
+            if (($week > 0) && ($week < 6)) {
 
                 //祝日リストにない
                 if (!in_array($date->format('Y-m-d'), $holidays, true)) {
-                    $businessDay = $date->format('Y/m/d');
+                    $businessDay = $date;
                     break;
                 }
             }
+            
+            //休日の場合は前日をチェック
             $date->modify('-1 days');
         }
         

@@ -35,8 +35,8 @@ $exitDate = old('exit_date');
         $withdrawalDate = $sesData->withdrawal_date;
         $withdrawalIrregular = $sesData->withdrawal_irregular;
         $withdrawalBank = $sesData->withdrawal_bank;
-        $admissionDate = $sesData->admission_date;
-        $exitDate = $sesData->exit_date;
+        $admissionDate = $sesData->admission_date->format('Y-m-d');
+        $exitDate = $sesData->exit_date ? $sesData->exit_date->format('Y-m-d') : '';
 @endphp
 @endisset
 
@@ -98,10 +98,7 @@ $exitDate = old('exit_date');
                     <option value=""></option>
 
 @foreach (config('paymentSite') as $key => $term)
-@php
-$selected = (old('payment_site') == $key) ? ' selected="selected"' : '';
-@endphp
-                    <option value="{{ $key }}"{{ $selected }}>{{ $term }}日</option>
+                    <option value="{{ $key }}"@if($paymentSite == $key)' selected="selected"';@endif>{{ $term }}日</option>
 @endforeach
 
                 </select>
@@ -115,8 +112,8 @@ $selected = (old('payment_site') == $key) ? ' selected="selected"' : '';
             <div>
                 <select name="deposit_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_irregular">
                     <option value=""></option>
-                    <option value="1">前</option>
-                    <option value="2">後</option>
+                    <option value="1"@if($depositIrregular == 1)' selected="selected"';@endif>前</option>
+                    <option value="2"@if($depositIrregular == 2)' selected="selected"';@endif>後</option>
                 </select>
 @error('deposit_irregular')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
@@ -150,10 +147,7 @@ $selected = (old('payment_site') == $key) ? ' selected="selected"' : '';
                     <option value=""></option>
 
 @for ($i = 1; $i <= 31; $i++)
-@php
-$selected = (old('withdrawal_date') == $i) ? ' selected="selected"' : '';
-@endphp
-                    <option value="{{ $i }}"{{ $selected }}>{{ $i }}</option>
+                    <option value="{{ $i }}"@if($withdrawalDate == $i)' selected="selected"';@endif>{{ $i }}</option>
 @endfor
 
                 </select>
@@ -168,8 +162,8 @@ $selected = (old('withdrawal_date') == $i) ? ' selected="selected"' : '';
             <div>
                 <select name="withdrawal_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_irregular">
                     <option value=""></option>
-                    <option value="1">前</option>
-                    <option value="2">後</option>
+                    <option value="1"@if($withdrawalIrregular == 1)' selected="selected"';@endif>前</option>
+                    <option value="2"@if($withdrawalIrregular == 2)' selected="selected"';@endif>後</option>
                 </select>
 @error('withdrawal_irregular')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>

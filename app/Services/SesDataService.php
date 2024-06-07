@@ -26,7 +26,7 @@ class SesDataService
      */
     public function getDetail(int $id)
     {
-        $sesData = SesData::find($id)->first();
+        $sesData = SesData::find($id);
         return $sesData;
     }
 

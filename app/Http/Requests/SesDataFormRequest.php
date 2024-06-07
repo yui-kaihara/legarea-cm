@@ -25,7 +25,7 @@ class SesDataFormRequest extends FormRequest
             'company_name' => ['required'],
             'case_name' => ['required'],
             'personnel_name' => ['required'],
-            'deposit_amount' => ['required_without_all:deposit_amount, withdrawal_amount'],
+            'deposit_amount' => ['required_without_all:deposit_amount,withdrawal_amount'],
             'payment_site' => ['required_with:deposit_amount'],
             'deposit_irregular' => ['required_with:deposit_amount'],
             'deposit_bank' => ['required_with:deposit_amount'],
