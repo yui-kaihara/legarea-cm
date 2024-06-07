@@ -55,11 +55,14 @@ class SesDataController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 詳細画面表示
+     * 
+     * @param int $id
      */
-    public function show(SesData $sesData)
+    public function show(int $id)
     {
-        //
+        $sesData = $this->sesDataService->getDetail($id);
+        return view('ses.show')->with('sesData', $sesData);
     }
 
     /**

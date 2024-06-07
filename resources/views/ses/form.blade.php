@@ -111,9 +111,11 @@ $exitDate = old('exit_date');
             <label for="deposit_irregular" class="w-40 text-sm">入金日が土日祝の場合</label>
             <div>
                 <select name="deposit_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_irregular">
-                    <option value=""></option>
-                    <option value="1"@if($depositIrregular == 1)' selected="selected"';@endif>前</option>
-                    <option value="2"@if($depositIrregular == 2)' selected="selected"';@endif>後</option>
+
+@foreach (config('irregular') as $index => $value)
+                    <option value="{{ $index }}"@if($depositIrregular == $index)' selected="selected"';@endif>{{ $value }}</option>
+@endforeach
+
                 </select>
 @error('deposit_irregular')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
@@ -161,9 +163,11 @@ $exitDate = old('exit_date');
             <label for="withdrawal_irregular" class="w-40 text-sm">出金日が土日祝の場合</label>
             <div>
                 <select name="withdrawal_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_irregular">
-                    <option value=""></option>
-                    <option value="1"@if($withdrawalIrregular == 1)' selected="selected"';@endif>前</option>
-                    <option value="2"@if($withdrawalIrregular == 2)' selected="selected"';@endif>後</option>
+
+@foreach (config('irregular') as $index => $value)
+                    <option value="{{ $index }}"@if($withdrawalIrregular == $index)' selected="selected"';@endif>{{ $value }}</option>
+@endforeach
+
                 </select>
 @error('withdrawal_irregular')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
