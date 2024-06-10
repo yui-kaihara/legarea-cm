@@ -17,7 +17,7 @@ $bank = old('bank');
         @method('PUT')
         
 @php
-        $summary = $otherData->summary;
+        $summaryId = $otherData->summary_id;
         $amount = $otherData->amount;
         $type = $otherData->type;
         $date = $otherData->date;
@@ -29,9 +29,12 @@ $bank = old('bank');
         <div class="flex items-baseline gap-2">
             <label for="summary_id" class="w-40 text-sm">摘要</label>
             <div>
-                <select name="summary_id" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="summary_id">
-
+                <select name="summary_id" class="w-36 px-4 border-gray-200 rounded-lg cursor-pointer" id="summary_id">
                     <option value=""></option>
+
+@foreach ($summaryItems as $summaryItem)
+                    <option value="{{ $summaryItem->id }}"@if($summaryId == $summaryItem->id)' selected="selected"'@endif>{{ $summaryItem->name }}</option>
+@endforeach
 
                 </select>
 @error('summary_id')
@@ -52,9 +55,10 @@ $bank = old('bank');
             <label for="type" class="w-40 text-sm">入金種別</label>
             <div>
                 <select name="type" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="type">
+                    <option value=""></option>
 
-@foreach (config('forms.type') as $index => $type)
-                    <option value="{{ $index }}"@if($type == $index)' selected="selected"'@endif>{{ $type }}</option>
+@foreach (config('forms.type') as $index => $value)
+                    <option value="{{ $index }}"@if($type == $index)' selected="selected"'@endif>{{ $value }}</option>
 @endforeach
 
                 </select>
@@ -84,6 +88,7 @@ $bank = old('bank');
             <label for="irregular" class="w-40 text-sm">入出金日が土日祝の場合</label>
             <div>
                 <select name="irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="irregular">
+                    <option value=""></option>
 
 @foreach (config('forms.irregular') as $index => $value)
                     <option value="{{ $index }}"@if($irregular == $index)' selected="selected"';@endif>{{ $value }}</option>

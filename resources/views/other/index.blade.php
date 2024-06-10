@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">その他 摘要一覧</x-slot>
     
-    @if (session('flash_message'))
+@if (session('flash_message'))
     <p class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
         {{ session('flash_message') }}
     </p>
@@ -15,7 +15,7 @@
             </a>
         </div>
         <div class="flex justify-end mb-3">
-            <a href="{{ route('other.create') }}" class="flex justify-center items-center gap-1 w-32 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">
+            <a href="{{ route('summary.index') }}" class="flex justify-center items-center gap-1 w-32 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">
                 <svg class="h-5 w-5"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="3" />  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
                 摘要項目
             </a>
@@ -34,20 +34,23 @@
             </thead>
             <tbody>
 
-
+@php
+$forms = config('forms');
+@endphp
+@foreach ($otherDatas as $otherData)
                 <tr>
-                    <td class="w-32 py-3 px-1">弁護士</td>
-                    <td class="w-56 py-3 px-1">{{ number_format(10000) }}</td>
-                    <td class="w-32 py-3 px-1">出金</td>
-                    <td class="w-32 py-3 px-1">1日</td>
-                    <td class="w-32 py-3 px-1">後</td>
-                    <td class="w-32 py-3 px-1">GMO</td>
+                    <td class="w-32 py-3 px-1">{{ $otherData->summary_id }}</td>
+                    <td class="w-56 py-3 px-1">{{ number_format($otherData->amount) }}</td>
+                    <td class="w-32 py-3 px-1">{{ $forms['type'][$otherData->type] }}</td>
+                    <td class="w-32 py-3 px-1">{{ $otherData->date }}日</td>
+                    <td class="w-32 py-3 px-1">{{ $forms['irregular'][$otherData->irregular] }}</td>
+                    <td class="w-32 py-3 px-1">{{ $otherData->bank }}</td>
                     <td class="w-40 py-3 px-1">
                         <div class="flex items-center gap-0.5 text-xs">
-                            <a href="{{ route('other.edit', [1]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
+                            <a href="{{ route('other.edit', [$otherData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
                                 編集
                             </a>
-                            <form action="{{ route('other.destroy', [1]) }}" method="post">
+                            <form action="{{ route('other.destroy', [$otherData]) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <input type="submit" value="削除" onclick="return confirm('本当に削除しますか？')" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow cursor-pointer" />
@@ -55,6 +58,7 @@
                         </div>
                     </td>
                 </tr>
+@endforeach
 
             </tbody>
         </table>

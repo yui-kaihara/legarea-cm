@@ -111,6 +111,7 @@ $exitDate = old('exit_date');
             <label for="deposit_irregular" class="w-40 text-sm">入金日が土日祝の場合</label>
             <div>
                 <select name="deposit_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_irregular">
+                    <option value=""></option>
 
 @foreach (config('forms.irregular') as $index => $value)
                     <option value="{{ $index }}"@if($depositIrregular == $index)' selected="selected"';@endif>{{ $value }}</option>
@@ -163,6 +164,7 @@ $exitDate = old('exit_date');
             <label for="withdrawal_irregular" class="w-40 text-sm">出金日が土日祝の場合</label>
             <div>
                 <select name="withdrawal_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_irregular">
+                    <option value=""></option>
 
 @foreach (config('forms.irregular') as $index => $value)
                     <option value="{{ $index }}"@if($withdrawalIrregular == $index)' selected="selected"';@endif>{{ $value }}</option>

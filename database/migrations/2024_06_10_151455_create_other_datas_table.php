@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('amount')->comment('金額');
             $table->integer('type')->comment('入金種別');
             $table->integer('date')->comment('入出金日');
+            $table->integer('irregular')->comment('入出金日が土日祝の場合');
             $table->string('bank')->comment('入出金銀行');
             $table->timestamps();
         });

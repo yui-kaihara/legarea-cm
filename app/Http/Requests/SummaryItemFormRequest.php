@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\SummaryItem;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OtherDataFormRequest extends FormRequest
+class SummaryItemFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,15 +21,8 @@ class OtherDataFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $summaryItemIds = SummaryItem::pluck('id')->all();
-
         return [
-            'summary_id' => ['required', 'in:'.implode(',', $summaryItemIds)],
-            'amount' => ['required'],
-            'type' => ['required', 'in:1,2'],
-            'date' => ['required'],
-            'irregular' => ['required', 'in:1,2'],
-            'bank' => ['required']
+            'name' => ['required']
         ];
     }
     
@@ -42,8 +34,7 @@ class OtherDataFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'required' => '入力必須です',
-            'in' => 'リストから選択してください'
+            'required' => '入力必須です'
         ];
     }
 }

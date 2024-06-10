@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OtherDataFormRequest;
 use App\Services\OtherDataService;
+use App\Services\SummaryItemService;
 use Illuminate\Http\Request;
 
 class OtherDataController extends Controller
@@ -12,12 +13,15 @@ class OtherDataController extends Controller
      * コンストラクタ
      * 
      * @param OtherDataService $otherDataService
+     * @param SummaryItemService $summaryItemService
      */
     public function __construct(
-        OtherDataService $otherDataService
+        OtherDataService $otherDataService,
+        SummaryItemService $summaryItemService
     )
     {
         $this->otherDataService = $otherDataService;
+        $this->summaryItemService = $summaryItemService;
     }
 
     /**
@@ -27,7 +31,8 @@ class OtherDataController extends Controller
      */
     public function index()
     {
-        return view('other.index');
+        $otherDatas = $this->otherDataService->getList();
+        return view('other.index')->with('otherDatas', $otherDatas);
     }
 
     /**
@@ -37,7 +42,8 @@ class OtherDataController extends Controller
      */
     public function create()
     {
-        return view('other.create');
+        $summaryItems = $this->summaryItemService->getList();
+        return view('other.create')->with('summaryItems', $summaryItems);
     }
 
     /**
@@ -53,27 +59,28 @@ class OtherDataController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 編集画面表示
+     * 
+     * @param int $id
+     * @return Illuminate\View\View
      */
-    public function show(string $id)
+    public function edit(int $id)
     {
-        //
+        $otherData = $this->otherDataService->getDetail($id);
+        $summaryItems = $this->summaryItemService->getList();
+        return view('other.edit')->with(['otherData'=> $otherData, 'summaryItems' => $summaryItems]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 更新処理
+     * 
+     * @param OtherDataFormRequest $request
+     * @param int $id
      */
-    public function edit(string $id)
+    public function update(OtherDataFormRequest $request, int $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        $this->otherDataService->update($request->all(), $id);
+        return redirect(route('other.index'))->with('flash_message', '更新が完了しました。');
     }
 
     /**
