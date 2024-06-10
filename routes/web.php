@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\CashManagementController;
+use App\Http\Controllers\OtherDataController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SesDataController;
+use App\Http\Controllers\SummaryItemController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,6 +25,12 @@ Route::middleware('auth')->group(function () {
     
     //SES
     Route::resource('ses', SesDataController::class);
+    
+    //その他
+    Route::resource('other', OtherDataController::class);
+    
+    //摘要項目
+    Route::resource('summary', SummaryItemController::class);
 });
 
 require __DIR__.'/auth.php';

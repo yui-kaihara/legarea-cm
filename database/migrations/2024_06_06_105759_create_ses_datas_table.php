@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string('case_name')->comment('案件名');
             $table->string('personnel_name')->comment('要員名');
             $table->integer('deposit_amount')->nullable()->comment('入金金額');
-            $table->string('payment_site')->nullable()->comment('支払いサイト');
-            $table->string('deposit_irregular')->nullable()->comment('入金日が土日祝の場合');
+            $table->integer('payment_site')->nullable()->comment('支払いサイト');
+            $table->integer('deposit_irregular')->nullable()->comment('入金日が土日祝の場合');
             $table->string('deposit_bank')->nullable()->comment('入金銀行');
             $table->integer('withdrawal_amount')->nullable()->comment('出金金額');
             $table->integer('withdrawal_date')->nullable()->comment('出金日');
-            $table->string('withdrawal_irregular')->nullable()->comment('出金日が土日祝の場合');
+            $table->integer('withdrawal_irregular')->nullable()->comment('出金日が土日祝の場合');
             $table->string('withdrawal_bank')->nullable()->comment('出金銀行');
             $table->date('admission_date')->comment('入場日');
             $table->date('exit_date')->nullable()->comment('退場日');

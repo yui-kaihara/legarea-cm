@@ -116,7 +116,7 @@ class SesData extends Model
     public function getLastPaymentDay()
     {
         //支払予定日
-        $scheduleDay = $this->payment_site ? config('paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
+        $scheduleDay = $this->payment_site ? config('forms.paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
         $scheduleDay = new DateTime($this->exit_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
 
         //支払いサイト30日の場合

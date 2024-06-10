@@ -1,6 +1,9 @@
 <x-app-layout>
     <x-slot name="header">SES 案件詳細</x-slot>
 
+@php
+$forms = config('forms');
+@endphp
     <div class="w-auto md:w-3/5 xl:w-2/5 mx-3 md:mx-auto py-10">
         <div class="flex justify-end gap-2 mb-2">
             <a href="{{ route('ses.index') }}" class="inline-block w-24 cursor-pointer py-2 px-3 text-center text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">一覧</a>
@@ -27,11 +30,11 @@
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">支払いサイト</th>
-                <td class="p-3 border">{{ $sesData->payment_site ? config('paymentSite')[$sesData->payment_site].'日' : ''; }}</td>
+                <td class="p-3 border">{{ $sesData->payment_site ? $forms['paymentSite'][$sesData->payment_site].'日' : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">入金日が土日祝の場合</th>
-                <td class="p-3 border">{{ config('irregular')[$sesData->deposit_irregular] }}</td>
+                <td class="p-3 border">{{ $forms['irregular'][$sesData->deposit_irregular] }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">入金銀行</th>
@@ -48,7 +51,7 @@
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">出金日が土日祝の場合</th>
-                <td class="p-3 border">{{ $sesData->withdrawal_irregular ? config('irregular')[$sesData->withdrawal_irregular].'日' : ''; }}</td>
+                <td class="p-3 border">{{ $forms['irregular'][$sesData->withdrawal_irregular] }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">出金銀行</th>

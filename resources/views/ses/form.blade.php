@@ -97,7 +97,7 @@ $exitDate = old('exit_date');
                 <select name="payment_site" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="payment_site">
                     <option value=""></option>
 
-@foreach (config('paymentSite') as $key => $term)
+@foreach (config('forms.paymentSite') as $key => $term)
                     <option value="{{ $key }}"@if($paymentSite == $key)' selected="selected"';@endif>{{ $term }}日</option>
 @endforeach
 
@@ -112,7 +112,7 @@ $exitDate = old('exit_date');
             <div>
                 <select name="deposit_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_irregular">
 
-@foreach (config('irregular') as $index => $value)
+@foreach (config('forms.irregular') as $index => $value)
                     <option value="{{ $index }}"@if($depositIrregular == $index)' selected="selected"';@endif>{{ $value }}</option>
 @endforeach
 
@@ -164,7 +164,7 @@ $exitDate = old('exit_date');
             <div>
                 <select name="withdrawal_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_irregular">
 
-@foreach (config('irregular') as $index => $value)
+@foreach (config('forms.irregular') as $index => $value)
                     <option value="{{ $index }}"@if($withdrawalIrregular == $index)' selected="selected"';@endif>{{ $value }}</option>
 @endforeach
 

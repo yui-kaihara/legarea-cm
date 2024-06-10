@@ -58,6 +58,7 @@ class SesDataController extends Controller
      * 詳細画面表示
      * 
      * @param int $id
+     * @return Illuminate\View\View
      */
     public function show(int $id)
     {
