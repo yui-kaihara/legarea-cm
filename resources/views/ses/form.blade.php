@@ -49,7 +49,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="case_name" class="w-40 text-sm">案件名</label>
             <div>
                 <input type="text" name="case_name" value="{{ $caseName }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="case_name" />
@@ -58,7 +58,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="personnel_name" class="w-40 text-sm">要員名</label>
             <div>
                 <input type="text" name="personnel_name" value="{{ $personnelName }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="personnel_name" />
@@ -67,7 +67,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="admission_date" class="w-40 text-sm">入場日</label>
             <div>
                 <input type="date" name="admission_date" value="{{ $admissionDate }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="admission_date" />
@@ -76,13 +76,13 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="exit_date" class="w-40 text-sm">退場日</label>
             <input type="date" name="exit_date" value="{{ $exitDate }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="exit_date" />
         </div>
         
         <span class="inline-block mt-16 px-5 py-1 bg-gray-400 rounded-sm text-white text-xs font-medium">入金</span>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="deposit_amount" class="w-40 text-sm">入金金額</label>
             <div>
                 <input type="number" name="deposit_amount" value="{{ $depositAmount }}" class="w-36 px-4 border-gray-200 rounded-lg" id="deposit_amount" /> 円
@@ -91,7 +91,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="payment_site" class="w-40 text-sm">支払いサイト</label>
             <div>
                 <select name="payment_site" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="payment_site">
@@ -107,7 +107,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="deposit_irregular" class="w-40 text-sm">入金日が土日祝の場合</label>
             <div>
                 <select name="deposit_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_irregular">
@@ -122,7 +122,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="deposit_bank" class="w-40 text-sm">入金銀行</label>
             <div>
                 <input type="text" name="deposit_bank" value="{{ $depositBank }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="deposit_bank" />
@@ -133,7 +133,7 @@ $exitDate = old('exit_date');
         </div>
         
         <span class="inline-block mt-16 px-5 py-1 bg-gray-400 rounded-sm text-white text-xs font-medium">出金</span>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="withdrawal_amount" class="w-40 text-sm">出金金額</label>
             <div>
                 <input type="number" name="withdrawal_amount" value="{{ $withdrawalAmount }}" class="w-36 px-4 border-gray-200 rounded-lg" id="withdrawal_amount" /> 円
@@ -142,7 +142,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="withdrawal_date" class="w-40 text-sm">出金日</label>
             <div>
                 <select name="withdrawal_date" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_date">
@@ -159,7 +159,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="withdrawal_irregular" class="w-40 text-sm">出金日が土日祝の場合</label>
             <div>
                 <select name="withdrawal_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_irregular">
@@ -174,7 +174,7 @@ $exitDate = old('exit_date');
 @enderror
             </div>
         </div>
-        <div class="flex items-baseline gap-2 mt-6">
+        <div class="flex items-baseline gap-2 mt-4">
             <label for="withdrawal_bank" class="w-40 text-sm">出金銀行</label>
             <div>
                 <input type="text" name="withdrawal_bank" value="{{ $withdrawalBank }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="withdrawal_bank" />

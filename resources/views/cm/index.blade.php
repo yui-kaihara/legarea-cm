@@ -25,7 +25,7 @@
             </form>
         </div>
 
-        <table class="border-collapse bg-white">
+        <table class="w-full border-collapse bg-white">
             <thead>
                 <tr class="text-sm font-medium text-gray-600 text-center">
                     <th class="w-1/12 py-3 border">日付</th>
@@ -53,18 +53,18 @@
             <tbody>
                 <tr class="bg-gray-50 text-xs text-center">
                     <td class="p-3 border">1</td>
-                    <td class="p-3 border">50000</td>
-                    <td class="p-3 border">50000</td>
+                    <td class="p-3 border">{{ number_format(50000) }}</td>
+                    <td class="p-3 border">{{ number_format(50000) }}</td>
                     <td class="p-3 border">CompanyA</td>
                     <td class="p-3 border">田中</td>
                     <td class="p-3 border">入金</td>
-                    <td class="p-3 border">100000</td>
+                    <td class="p-3 border">{{ number_format(10000) }}</td>
                     <td class="p-3 border">三井</td>
                     <td class="p-3 border">弁護士</td>
                     <td class="p-3 border">10000</td>
                     <td class="p-3 border">出金</td>
                     <td class="p-3 border">GMO</td>
-                    <td class="p-3 border">5000000</td>
+                    <td class="p-3 border">{{ number_format(5000000) }}</td>
                 </tr>
                 <tr class="text-xs text-center">
                     <td class="p-3 border">1</td>
