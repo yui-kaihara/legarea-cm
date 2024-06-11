@@ -7,6 +7,7 @@ use App\Http\Controllers\SesDataController;
 use App\Http\Controllers\SummaryItemController;
 use Illuminate\Support\Facades\Route;
 
+//ログイン画面
 Route::get('/', function () {
     return redirect('/login');
 });

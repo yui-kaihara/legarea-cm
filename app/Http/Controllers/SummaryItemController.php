@@ -70,6 +70,7 @@ class SummaryItemController extends Controller
      * 
      * @param SummaryItemFormRequest $request
      * @param int $id
+     * @return Illuminate\View\View
      */
     public function update(SummaryItemFormRequest $request, int $id)
     {
@@ -78,10 +79,14 @@ class SummaryItemController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 削除処理
+     * 
+     * @param int $id
+     * @return Illuminate\View\View
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $this->summaryItemService->destroy($id);
+        return redirect(route('summary.index'))->with('flash_message', '削除が完了しました。');
     }
 }

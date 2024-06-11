@@ -36,4 +36,14 @@ class OtherData extends Model
      * @array
      */
     protected $fillable = ['summary_id', 'amount', 'type', 'date', 'irregular', 'bank'];
+    
+    /*
+     * 摘要項目を取得
+     *
+     * @return App\Models\SummaryItem
+     */
+    public function summaryItem()
+    {
+        return $this->hasMany(SummaryItem::class, 'id', 'summary_id');
+    }
 }

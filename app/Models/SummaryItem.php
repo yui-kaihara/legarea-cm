@@ -36,4 +36,14 @@ class SummaryItem extends Model
      * @array
      */
     protected $fillable = ['name'];
+    
+    /*
+     * その他データを取得
+     *
+     * @return App\Models\OtherData
+     */
+    public function otherData()
+    {
+        return $this->belongsTo(OtherData::class);
+    }
 }
