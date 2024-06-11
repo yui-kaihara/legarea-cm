@@ -2,32 +2,45 @@
     <x-slot name="header">CM表</x-slot>
     
     <div class="w-11/12 lg:w-5/6 mx-auto pt-10 pb-20">
-        <div class="flex items-end gap-3 mb-2">
-            <form action="javascript:void(0)">
-                @csrf
-                <select name="year" class="w-24 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
+        <div class="flex justify-between mb-2">
+            <div class="flex items-end gap-3">
+                <form action="javascript:void(0)">
+                    @csrf
+                    <select name="year" class="w-24 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
 
-@for ($i = 2023; $i <= 2030; $i++)
-                    <option value="{{ $i }}">{{ $i }}</option>
+@php
+$year = now()->format('Y');
+@endphp
+@for ($i = $year - 1; $i <= $year; $i++)
+                        <option value="{{ $i }}">{{ $i }}</option>
 @endfor
-                </select>
-                年
-            </form>
-            <form action="javascript:void(0)">
-                @csrf
-                <select name="month" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
+                    </select>
+                    年
+                </form>
+                <form action="javascript:void(0)">
+                    @csrf
+                    <select name="month" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
 
 @for ($i = 1; $i <= 12; $i++)
-                    <option value="{{ $i }}">{{ $i }}</option>
+                        <option value="{{ $i }}">{{ $i }}</option>
 @endfor
-                </select>
-                月
-            </form>
+                    </select>
+                    月
+                </form>
+            </div>
+            <div>
+                <a href="" class="flex justify-center items-center gap-1 w-32 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">ダウンロード</a>
+                <div class="flex gap-1 mt-1">
+                    <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">編集</a>
+                    <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">削除</a>
+                </div>
+            </div>
         </div>
 
         <table class="w-full border-collapse bg-white">
             <thead>
                 <tr class="text-sm font-medium text-gray-600 text-center">
+                    <th class="bg-gray-100"></th>
                     <th class="w-1/12 py-3 border">日付</th>
                     <th colspan="2" class="w-1/6 py-3 border">飲食</th>
                     <th colspan="5" class="w-1/3 py-3 border">SES</th>
@@ -35,6 +48,7 @@
                     <th class="w-1/12 py-3 border">実残高</th>
                 </tr>
                 <tr class="text-xs font-medium text-gray-600 text-center">
+                    <th class="bg-gray-100"></th>
                     <th class="p-3 border"></th>
                     <th class="p-3 border">○○店</th>
                     <th class="p-3 border">○○店</th>
@@ -52,6 +66,7 @@
             </thead>
             <tbody>
                 <tr class="bg-gray-50 text-xs text-center">
+                    <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
                     <td class="p-3 border">1</td>
                     <td class="p-3 border">{{ number_format(50000) }}</td>
                     <td class="p-3 border">{{ number_format(50000) }}</td>
@@ -67,6 +82,7 @@
                     <td class="p-3 border">{{ number_format(5000000) }}</td>
                 </tr>
                 <tr class="text-xs text-center">
+                    <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
                     <td class="p-3 border">1</td>
                     <td class="p-3 border">50000</td>
                     <td class="p-3 border">50000</td>
@@ -82,6 +98,7 @@
                     <td class="p-3 border">5000000</td>
                 </tr>
                 <tr class="bg-gray-50 text-xs text-center">
+                    <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
                     <td class="p-3 border">1</td>
                     <td class="p-3 border">50000</td>
                     <td class="p-3 border">50000</td>

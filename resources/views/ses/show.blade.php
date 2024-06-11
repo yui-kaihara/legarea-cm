@@ -34,7 +34,7 @@ $forms = config('forms');
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">入金日が土日祝の場合</th>
-                <td class="p-3 border">{{ $forms['irregular'][$sesData->deposit_irregular] }}</td>
+                <td class="p-3 border">{{ $sesData->deposit_irregular ? $forms['irregular'][$sesData->deposit_irregular] : '' }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">入金銀行</th>
@@ -51,7 +51,7 @@ $forms = config('forms');
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">出金日が土日祝の場合</th>
-                <td class="p-3 border">{{ $forms['irregular'][$sesData->withdrawal_irregular] }}</td>
+                <td class="p-3 border">{{ $sesData->withdrawal_irregular ? $forms['irregular'][$sesData->withdrawal_irregular] : '' }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">出金銀行</th>
