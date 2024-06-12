@@ -2,7 +2,7 @@
     <x-slot name="header">CM表</x-slot>
     
     <div class="w-11/12 lg:w-5/6 mx-auto pt-10 pb-20">
-        <div class="flex justify-between mb-2">
+        <div class="flex justify-between items-center mb-2">
             <div class="flex items-end gap-3">
                 <form action="javascript:void(0)">
                     @csrf
@@ -30,19 +30,18 @@ $year = now()->format('Y');
                     月
                 </form>
             </div>
-            <div>
-                <a href="" class="flex justify-center items-center gap-1 w-32 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">ダウンロード</a>
-                <div class="flex gap-1 mt-1">
-                    
+
 @php
 $type = trim(implode(',', config('forms.type')), "'");
 $summaryItemName = trim(implode(',', $summaryItems->pluck('name')->all()), "'");
 $summaryItemId = trim(implode(',', $summaryItems->pluck('id')->all()), "'");
 @endphp
 
-                    <div id="popup" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="編集"></div>
-                    <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">削除</a>
-                </div>
+            <div class="flex gap-1 mt-1">
+                <div id="popup-register" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="登録"></div>
+                <div id="popup-update" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="編集"></div>
+                <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">削除</a>
+                <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">ダウンロード</a>
             </div>
         </div>
 
@@ -125,7 +124,5 @@ $summaryItemId = trim(implode(',', $summaryItems->pluck('id')->all()), "'");
             </tbody>
         </table>
     </div>
-
-    @include('cm.form', ['route' => route('cm.store'), 'submitText' => '登録'])
 
 </x-app-layout>

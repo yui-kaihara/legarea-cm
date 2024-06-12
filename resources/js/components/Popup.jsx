@@ -1,32 +1,31 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
 
-function Popup() {
+const Popup = ({ id }) => {
     const [show, setShow] = useState(false);
 
     const togglePopup = () => {
         setShow(!show);
     };
-    
+
     //入金種別の配列を用意
-    const types = document.getElementById('popup').getAttribute('data-type').split(",");
+    const types = document.getElementById(id).getAttribute('data-type').split(",");
     
     //摘要項目の配列を用意
-    const summaryItemNames = document.getElementById('popup').getAttribute('data-summary-item-name').split(",");
-    const summaryItemIds = document.getElementById('popup').getAttribute('data-summary-item-id').split(",");
+    const summaryItemNames = document.getElementById(id).getAttribute('data-summary-item-name').split(",");
+    const summaryItemIds = document.getElementById(id).getAttribute('data-summary-item-id').split(",");
     const summaryItems = [];
     summaryItemIds.forEach((key, index) => {
         summaryItems[key] = summaryItemNames[index];
     });
     
     //送信ボタンの文言を取得
-    const submitText = document.getElementById('popup').getAttribute('data-submit-text');
+    const submitText = document.getElementById(id).getAttribute('data-submit-text');
 
     return (
         <div>
-            <button onClick={togglePopup} className="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">編集</button>
+            <button onClick={togglePopup} className="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">{submitText}</button>
             {show && (
-                <div className="popup absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs is-show">
+                <div className="absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs is-show">
                     <div class="flex justify-between items-start">
                         <p className="mb-5 font-semibold">2024-06-02</p>
                         <button onClick={togglePopup}>
@@ -119,13 +118,3 @@ function Popup() {
 }
 
 export default Popup;
-
-if (document.getElementById('popup')) {
-    const Index = ReactDOM.createRoot(document.getElementById("popup"));
-
-    Index.render(
-        <React.StrictMode>
-            <Popup/>
-        </React.StrictMode>
-    )
-}

@@ -13,4 +13,5 @@ import './bootstrap';
  */
 
 import './components/Example';
-import './components/Popup';
+import './components/Popup-register';
+import './components/Popup-update';
