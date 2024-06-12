@@ -5,7 +5,6 @@ use App\Http\Controllers\OtherDataController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SesDataController;
 use App\Http\Controllers\SummaryItemController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 //ログイン画面

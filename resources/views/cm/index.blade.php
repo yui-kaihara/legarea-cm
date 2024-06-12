@@ -14,6 +14,7 @@ $year = now()->format('Y');
 @for ($i = $year - 1; $i <= $year; $i++)
                         <option value="{{ $i }}">{{ $i }}</option>
 @endfor
+
                     </select>
                     年
                 </form>
@@ -24,6 +25,7 @@ $year = now()->format('Y');
 @for ($i = 1; $i <= 12; $i++)
                         <option value="{{ $i }}">{{ $i }}</option>
 @endfor
+
                     </select>
                     月
                 </form>
@@ -31,7 +33,14 @@ $year = now()->format('Y');
             <div>
                 <a href="" class="flex justify-center items-center gap-1 w-32 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">ダウンロード</a>
                 <div class="flex gap-1 mt-1">
-                    <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">編集</a>
+                    
+@php
+$type = trim(implode(',', config('forms.type')), "'");
+$summaryItemName = trim(implode(',', $summaryItems->pluck('name')->all()), "'");
+$summaryItemId = trim(implode(',', $summaryItems->pluck('id')->all()), "'");
+@endphp
+
+                    <div id="popup" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="編集"></div>
                     <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">削除</a>
                 </div>
             </div>
@@ -116,4 +125,7 @@ $year = now()->format('Y');
             </tbody>
         </table>
     </div>
+
+    @include('cm.form', ['route' => route('cm.store'), 'submitText' => '登録'])
+
 </x-app-layout>

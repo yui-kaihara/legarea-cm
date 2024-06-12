@@ -3,16 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\CashManagement;
+use App\Services\OtherDataService;
+use App\Services\SummaryItemService;
 use Illuminate\Http\Request;
 
 class CashManagementController extends Controller
 {
     /**
+     * コンストラクタ
+     * 
+     * @param OtherDataService $otherDataService
+     * @param SummaryItemService $summaryItemService
+     */
+    public function __construct(
+        OtherDataService $otherDataService,
+        SummaryItemService $summaryItemService
+    )
+    {
+        $this->otherDataService = $otherDataService;
+        $this->summaryItemService = $summaryItemService;
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('cm.index');
+        $summaryItems = $this->summaryItemService->getList();
+        return view('cm.index')->with([
+            'summaryItems' => $summaryItems
+        ]);
     }
 
     /**
