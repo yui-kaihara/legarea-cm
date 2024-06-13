@@ -50,7 +50,45 @@ class SesDataController extends Controller
      */
     public function store(SesDataFormRequest $request)
     {
-        $this->sesDataService->store($request->all());
+        $requests = $request->all();
+        
+        //出金も入力がある場合は分けて登録する
+        if ($requests['withdrawal_amount']) {
+            
+            //入金データ
+            $depositRequests = [
+                'company_name' => $requests['company_name'],
+                'case_name' => $requests['case_name'],
+                'personnel_name' => $requests['personnel_name'],
+                'admission_date' => $requests['admission_date'],
+                'exit_date' => $requests['exit_date'],
+                'deposit_amount' => $requests['deposit_amount'],
+                'deposit_payment_site' => $requests['deposit_payment_site'],
+                'deposit_irregular' => $requests['deposit_irregular'],
+                'deposit_bank' => $requests['deposit_bank']
+            ];
+            $depositData = $this->sesDataService->store($depositRequests);
+            
+            //出金データ
+            $withdrawalRequests = [
+                'company_name' => $requests['company_name'],
+                'case_name' => $requests['case_name'],
+                'personnel_name' => $requests['personnel_name'],
+                'admission_date' => $requests['admission_date'],
+                'exit_date' => $requests['exit_date'],
+                'withdrawal_amount' => $requests['withdrawal_amount'],
+                'withdrawal_payment_site' => $requests['withdrawal_payment_site'],
+                'withdrawal_irregular' => $requests['withdrawal_irregular'],
+                'withdrawal_bank' => $requests['withdrawal_bank'],
+                'deposit_id' => $depositData->id
+            ];
+            $this->sesDataService->store($withdrawalRequests);
+
+        } else {
+            $this->sesDataService->store($request);
+        }
+        
+        
         return redirect(route('ses.index'))->with('flash_message', '登録が完了しました。');
     }
 

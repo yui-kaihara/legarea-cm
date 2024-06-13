@@ -6,7 +6,7 @@ const PopupRegister = () => {
     const id = "popup-register";
 
     return (
-        <Popup id={id} />
+        <Popup id={id} path="" />
     );
 };
 

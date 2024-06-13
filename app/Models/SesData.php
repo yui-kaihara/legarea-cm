@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
+use App\Services\CalcPaymentDayService;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use League\Csv\Reader;
 
 class SesData extends Model
 {
@@ -53,85 +52,44 @@ class SesData extends Model
         'company_name',
         'case_name',
         'personnel_name',
+        'admission_date',
+        'exit_date',
         'deposit_amount',
-        'payment_site',
+        'deposit_payment_site',
         'deposit_irregular',
         'deposit_bank',
         'withdrawal_amount',
-        'withdrawal_date',
+        'withdrawal_payment_site',
         'withdrawal_irregular',
         'withdrawal_bank',
-        'admission_date',
-        'exit_date'
+        'deposit_id'
     ];
 
     /*
-     * 祝日を取得
-     *
-     * @return array
+     * 支払日取得
+     * 
+     * @return int
      */
-    public function getHolidays()
-    {
-        $year = now()->format('Y');
-
-        //CSVファイル名
-        $csvFileName = 'holidays-'.$year.'.csv';
-
-        if (!Storage::exists($csvFileName)) {
-
-            //去年のファイルを削除
-            Storage::delete('holidays-'.($year - 1).'.csv');
-
-            //今年のCSVファイルを取得
-            $response = Http::get('https://holidays-jp.github.io/api/v1/{$year}/date.csv');
-
-            //CSVデータを取得
-            $csvData = $response->body();
-
-            //取得したCSVデータを保存
-            Storage::put($csvFileName, $csvData);
-        }
-
-        //ファイルのパスを取得
-        $filePath = Storage::path($csvFileName);
-
-        //CSVファイルを読み込む
-        $csv = Reader::createFromPath($filePath, 'r');
-
-        //レコードを取得
-        $records = $csv->getRecords();
-
-        //データを配列に変換
-        $data = iterator_to_array($records);
-
-        //日付だけを取得
-        $holidays = array_column($data, 0);
-
-        return $holidays;
-    }
-
-    /*
-     * 最終支払日を取得
-     */
-    public function getLastPaymentDay()
+    public function getPaymentDayAttribute()
     {
         //支払予定日
-        $scheduleDay = $this->payment_site ? config('forms.paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
-        $scheduleDay = new DateTime($this->exit_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
-
+        $scheduleDay = $this->deposit_payment_site ? config('forms.paymentSite')[$this->deposit_payment_site] - 30 : config('forms.paymentSite')[$this->withdrawal_payment_site] - 30;
+        $scheduleDay = new DateTime(now()->format('Y-m').'-'.$scheduleDay);
+        
         //支払いサイト30日の場合
-        if ($this->payment_site == 1) {
+        if ($this->deposit_payment_site == 1) {
             
             //支払予定日（月の最終日）
-            $scheduleDay = new DateTime('last day of ' . $this->exit_date->modify('+1 month')->format('Y-m'));
+            $scheduleDay = new DateTime('last day of ' . now()->format('Y-m'));
         }
-        
-        //最終支払日（営業日）
-        $lastPaymentDay = $this->getBusinessDay($scheduleDay, $this->getHolidays());
+
+        //最終支払日を取得
+        $calcPaymentDayService = new CalcPaymentDayService();
+        $lastPaymentDay = $calcPaymentDayService->getBusinessDay($scheduleDay)->format('j');
         
         return $lastPaymentDay;
     }
-    
+
     /*
      * ステータス取得
      * 
@@ -144,40 +102,69 @@ class SesData extends Model
 
         //入場日
         $admissionDate = new DateTime($this->admission_date);
-        
+
         //ステータスを設定
         $status = 1;
 
         //入場日を過ぎた場合
         if ($now >= $admissionDate) {
-            $status = 2;
+            
+            //支払予定日
+            $scheduleDay = $this->payment_site ? config('forms.paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
+            $scheduleDay = new DateTime($this->admission_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
+    
+            //支払いサイト30日の場合
+            if ($this->payment_site == 1) {
+                
+                //支払予定日（月の最終日）
+                $scheduleDay = new DateTime('last day of ' . $this->admission_date->modify('+1 month')->format('Y-m'));
+            }
 
+            //初回支払日を取得
+            $calcPaymentDayService = new CalcPaymentDayService();
+            $firstPaymentDay = $calcPaymentDayService->getBusinessDay($scheduleDay);
+
+            //初回支払月以降かどうか
+            $status = ($now->format('Y-m') >= $firstPaymentDay->format('Y-m')) ? 3 : 2;
+            
             //退場日が設定されている場合
             if ($this->exit_date) {
 
                 //退場日
                 $exitDate = new DateTime($this->exit_date);
-                
+
                 if ($now <= $exitDate) {
-                    
+
                     //退場日までの残り日数を算出
                     $limit = $exitDate->diff($now)->days;
     
                     //残り1か月以内の場合
                     if (($limit <= 31) && ($limit >= 0)) {
-                        $status = 3;
+                        $status = ($now->format('Y-m') >= $firstPaymentDay->format('Y-m')) ? 5 : 4;
                     }
                 
                 //退場日を過ぎた場合
                 } else {
-                    $status = 4;
+                    $status = ($now->format('Y-m') >= $firstPaymentDay->format('Y-m')) ? 7 : 6;
+                    
+                    //支払予定日
+                    $scheduleDay = $this->payment_site ? config('forms.paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
+                    $scheduleDay = new DateTime($this->exit_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
+            
+                    //支払いサイト30日の場合
+                    if ($this->payment_site == 1) {
+                        
+                        //支払予定日（月の最終日）
+                        $scheduleDay = new DateTime('last day of ' . $this->exit_date->modify('+1 month')->format('Y-m'));
+                    }
 
                     //最終支払日を取得
-                    $lastPaymentDay = $this->getLastPaymentDay();
+                    $calcPaymentDayService = new CalcPaymentDayService();
+                    $lastPaymentDay = $calcPaymentDayService->getBusinessDay($scheduleDay);
                     
                     //最終支払日を過ぎた場合
                     if ($now > $lastPaymentDay) {
-                        $status = 5;
+                        $status = 8;
                     }
                 }
             }
@@ -187,36 +174,12 @@ class SesData extends Model
     }
     
     /*
-     * 営業日取得
-     * 
-     * @param DateTime $date
-     * @param array $holidays
-     * @return bool
+     * 飲食データを取得
+     *
+     * @return App\Models\ShopData
      */
-    public function getBusinessDay(DateTime $date, array $holidays)
+    public function shopData()
     {
-        //営業日を設定
-        $businessDay = $date;
-
-        while (true) {
-            
-            //曜日を取得
-            $week = (int)$date->format('w');
-
-            //土日以外
-            if (($week > 0) && ($week < 6)) {
-
-                //祝日リストにない
-                if (!in_array($date->format('Y-m-d'), $holidays, true)) {
-                    $businessDay = $date;
-                    break;
-                }
-            }
-            
-            //休日の場合は前日をチェック
-            $date->modify('-1 days');
-        }
-        
-        return $businessDay;
+        return $this->hasOne(ShopData::class);
     }
 }

@@ -1,6 +1,12 @@
 <x-app-layout>
     <x-slot name="header">CM表</x-slot>
-    
+
+@if (session('flash_message'))
+    <p class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
+        {{ session('flash_message') }}
+    </p>
+@endif
+
     <div class="w-11/12 lg:w-5/6 mx-auto pt-10 pb-20">
         <div class="flex justify-between items-center mb-2">
             <div class="flex items-end gap-3">
@@ -46,7 +52,7 @@ $summaryItemId = trim(implode(',', $summaryItems->pluck('id')->all()), "'");
         </div>
 
         <table class="w-full border-collapse bg-white">
-            <thead>
+            <thead class="sticky top-0 left-0 bg-white">
                 <tr class="text-sm font-medium text-gray-600 text-center">
                     <th class="bg-gray-100"></th>
                     <th class="w-1/12 py-3 border">日付</th>
@@ -73,54 +79,61 @@ $summaryItemId = trim(implode(',', $summaryItems->pluck('id')->all()), "'");
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-gray-50 text-xs text-center">
+@for ($i = 1; $i <= 31; $i++)
+@php
+$bgColor = ($i % 2 === 1) ? 'bg-gray-50 ' : '';
+$maxCount = 1;
+$sesDataCount = $sesDatas->has($i) ? $sesDatas[$i]->count() : 0;
+$otherDataCount = $otherDatas->has($i) ? $otherDatas[$i]->count() : 0;
+if ($sesDataCount || $otherDataCount) {
+    $maxCount = ($sesDataCount >= $otherDataCount) ? $sesDataCount : $otherDataCount;
+}
+@endphp
+@for ($j = 0; $j < $maxCount; $j++)
+
+                <tr class="{{ $bgColor }}text-xs text-center">
                     <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
-                    <td class="p-3 border">1</td>
-                    <td class="p-3 border">{{ number_format(50000) }}</td>
-                    <td class="p-3 border">{{ number_format(50000) }}</td>
-                    <td class="p-3 border">CompanyA</td>
-                    <td class="p-3 border">田中</td>
-                    <td class="p-3 border">入金</td>
-                    <td class="p-3 border">{{ number_format(10000) }}</td>
-                    <td class="p-3 border">三井</td>
-                    <td class="p-3 border">弁護士</td>
-                    <td class="p-3 border">10000</td>
-                    <td class="p-3 border">出金</td>
-                    <td class="p-3 border">GMO</td>
+                    <td class="p-3 border">{{ $i }}</td>
+
+@if ($shopDatas->has($i))
+                    <td class="p-3 border">{{ number_format($shopDatas[$i]->sales1) }}</td>
+                    <td class="p-3 border">{{ number_format($shopDatas[$i]->sales2) }}</td>
+@else
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+@endif
+
+@if ($sesDatas->has($i))
+                    <td class="p-3 border">{{ $sesDatas[$i][$j]->company_name }}</td>
+                    <td class="p-3 border">{{ $sesDatas[$i][$j]->personnel_name }}</td>
+                    <td class="p-3 border">{{ ($sesDatas[$i][$j]->deposit_amount) ? '入金' : '出金'; }}</td>
+                    <td class="p-3 border">{{ ($sesDatas[$i][$j]->deposit_amount) ? number_format($sesDatas[$i][$j]->deposit_amount) : number_format($sesDatas[$i][$j]->withdrawal_amount); }}</td>
+                    <td class="p-3 border">{{ ($sesDatas[$i][$j]->deposit_bank) ?? ($sesDatas[$i][$j]->withdrawal_bank); }}</td>
+@else
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+@endif
+
+@if ($otherDatas->has($i))
+                    <td class="p-3 border">{{ $otherDatas[$i][$j]->summaryItem[0]->name }}</td>
+                    <td class="p-3 border">{{ number_format($otherDatas[$i][$j]->amount) }}</td>
+                    <td class="p-3 border">{{ config('forms.type')[$otherDatas[$i][$j]->type] }}</td>
+                    <td class="p-3 border">{{ $otherDatas[$i][$j]->bank }}</td>
+@else
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+@endif
+
                     <td class="p-3 border">{{ number_format(5000000) }}</td>
                 </tr>
-                <tr class="text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
-                    <td class="p-3 border">1</td>
-                    <td class="p-3 border">50000</td>
-                    <td class="p-3 border">50000</td>
-                    <td class="p-3 border">CompanyA</td>
-                    <td class="p-3 border">田中</td>
-                    <td class="p-3 border">入金</td>
-                    <td class="p-3 border">100000</td>
-                    <td class="p-3 border">三井</td>
-                    <td class="p-3 border">弁護士</td>
-                    <td class="p-3 border">10000</td>
-                    <td class="p-3 border">出金</td>
-                    <td class="p-3 border">GMO</td>
-                    <td class="p-3 border">5000000</td>
-                </tr>
-                <tr class="bg-gray-50 text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
-                    <td class="p-3 border">1</td>
-                    <td class="p-3 border">50000</td>
-                    <td class="p-3 border">50000</td>
-                    <td class="p-3 border">CompanyA</td>
-                    <td class="p-3 border">田中</td>
-                    <td class="p-3 border">入金</td>
-                    <td class="p-3 border">100000</td>
-                    <td class="p-3 border">三井</td>
-                    <td class="p-3 border">弁護士</td>
-                    <td class="p-3 border">10000</td>
-                    <td class="p-3 border">出金</td>
-                    <td class="p-3 border">GMO</td>
-                    <td class="p-3 border">5000000</td>
-                </tr>
+@endfor
+@endfor
+
             </tbody>
         </table>
     </div>

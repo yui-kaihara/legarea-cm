@@ -10,11 +10,30 @@ class SesDataService
     /**
      * 一覧取得
      * 
+     * @param bool $groupByFlag
      * @return Collection
      */
-    public function getList()
+    public function getList(bool $groupByFlag = FALSE)
     {
         $sesDatas = SesData::get();
+        
+        if ($groupByFlag) {
+
+            //アクセサで支払日を取得
+            foreach ($sesDatas as $index => $sesData) {
+                $sesData->payment_day = $sesData->payment_day;
+
+                if (!in_array($sesData->status, [3, 5, 7])) {
+                    $sesDatas->forget($index);
+                }
+            }
+  
+            //支払日でグループ化し、キーに設定
+            $sesDatas = $sesDatas->groupBy('payment_day')->mapWithKeys(function ($items, $key) {
+                return [$key => $items];
+            });
+        }
+
         return $sesDatas;
     }
     
@@ -39,7 +58,7 @@ class SesDataService
     public function store(array $requests)
     {
         $sesData = new SesData();
-        $sesData->fill($requests)->save();
+        return $sesData->create($requests);
     }
     
     /**

@@ -16,16 +16,17 @@ return new class extends Migration
             $table->string('company_name')->comment('会社名');
             $table->string('case_name')->comment('案件名');
             $table->string('personnel_name')->comment('要員名');
+            $table->date('admission_date')->comment('入場日');
+            $table->date('exit_date')->nullable()->comment('退場日');
             $table->integer('deposit_amount')->nullable()->comment('入金金額');
-            $table->integer('payment_site')->nullable()->comment('支払いサイト');
+            $table->integer('deposit_payment_site')->nullable()->comment('入金支払いサイト');
             $table->integer('deposit_irregular')->nullable()->comment('入金日が土日祝の場合');
             $table->string('deposit_bank')->nullable()->comment('入金銀行');
             $table->integer('withdrawal_amount')->nullable()->comment('出金金額');
-            $table->integer('withdrawal_date')->nullable()->comment('出金日');
+            $table->integer('withdrawal_payment_site')->nullable()->comment('出金支払いサイト');
             $table->integer('withdrawal_irregular')->nullable()->comment('出金日が土日祝の場合');
             $table->string('withdrawal_bank')->nullable()->comment('出金銀行');
-            $table->date('admission_date')->comment('入場日');
-            $table->date('exit_date')->nullable()->comment('退場日');
+            $table->integer('deposit_id')->nullable()->comment('入金ID');
             $table->timestamps();
         });
     }

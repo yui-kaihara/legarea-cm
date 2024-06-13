@@ -7,16 +7,16 @@
 $companyName = old('company_name');
 $caseName = old('case_name');
 $personnelName = old('personnel_name');
+$admissionDate = old('admission_date');
+$exitDate = old('exit_date');
 $depositAmount = old('deposit_amount');
-$paymentSite = old('payment_site');
+$depositPaymentSite = old('deposit_payment_site');
 $depositIrregular = old('deposit_irregular');
 $depositBank = old('deposit_bank');
 $withdrawalAmount = old('withdrawal_amount');
-$withdrawalDate = old('withdrawal_date');
+$withdrawalPaymentSite = old('withdrawal_payment_site');
 $withdrawalIrregular = old('withdrawal_irregular');
-$withdrawalBank = old('withdrawal_bank');
-$admissionDate = old('admission_date');
-$exitDate = old('exit_date');
+$withdrawalBank = old('withdrawal_payment_site');
 @endphp
 
 <!--更新画面-->
@@ -27,16 +27,16 @@ $exitDate = old('exit_date');
         $companyName = $sesData->company_name;
         $caseName = $sesData->case_name;
         $personnelName = $sesData->personnel_name;
+        $admissionDate = $sesData->admission_date->format('Y-m-d');
+        $exitDate = $sesData->exit_date ? $sesData->exit_date->format('Y-m-d') : '';
         $depositAmount = $sesData->deposit_amount;
-        $paymentSite = $sesData->payment_site;
+        $depositPaymentSite = $sesData->deposit_payment_site;
         $depositIrregular = $sesData->deposit_irregular;
         $depositBank = $sesData->deposit_bank;
         $withdrawalAmount = $sesData->withdrawal_amount;
-        $withdrawalDate = $sesData->withdrawal_date;
+        $withdrawalPaymentSite = $sesData->withdrawal_payment_site;
         $withdrawalIrregular = $sesData->withdrawal_irregular;
         $withdrawalBank = $sesData->withdrawal_bank;
-        $admissionDate = $sesData->admission_date->format('Y-m-d');
-        $exitDate = $sesData->exit_date ? $sesData->exit_date->format('Y-m-d') : '';
 @endphp
 @endisset
 
@@ -83,7 +83,7 @@ $exitDate = old('exit_date');
         
         <span class="inline-block mt-16 px-5 py-1 bg-gray-400 rounded-sm text-white text-xs font-medium">入金</span>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="deposit_amount" class="w-40 text-sm">入金金額</label>
+            <label for="deposit_amount" class="w-40 text-sm">金額</label>
             <div>
                 <input type="number" name="deposit_amount" value="{{ $depositAmount }}" class="w-36 px-4 border-gray-200 rounded-lg" id="deposit_amount" /> 円
 @error('deposit_amount')
@@ -92,23 +92,23 @@ $exitDate = old('exit_date');
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="payment_site" class="w-40 text-sm">支払いサイト</label>
+            <label for="deposit_payment_site" class="w-40 text-sm">支払いサイト</label>
             <div>
-                <select name="payment_site" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="payment_site">
+                <select name="deposit_payment_site" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_payment_site">
                     <option value=""></option>
 
 @foreach (config('forms.paymentSite') as $key => $term)
-                    <option value="{{ $key }}"@if($paymentSite == $key)' selected="selected"';@endif>{{ $term }}日</option>
+                    <option value="{{ $key }}"@if($depositPaymentSite == $key)' selected="selected"';@endif>{{ $term }}日</option>
 @endforeach
 
                 </select>
-@error('payment_site')
+@error('deposit_payment_site')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="deposit_irregular" class="w-40 text-sm">入金日が土日祝の場合</label>
+            <label for="deposit_irregular" class="w-40 text-sm">土日祝の場合</label>
             <div>
                 <select name="deposit_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="deposit_irregular">
                     <option value=""></option>
@@ -124,7 +124,7 @@ $exitDate = old('exit_date');
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="deposit_bank" class="w-40 text-sm">入金銀行</label>
+            <label for="deposit_bank" class="w-40 text-sm">銀行</label>
             <div>
                 <input type="text" name="deposit_bank" value="{{ $depositBank }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="deposit_bank" />
 @error('deposit_bank')
@@ -135,7 +135,7 @@ $exitDate = old('exit_date');
         
         <span class="inline-block mt-16 px-5 py-1 bg-gray-400 rounded-sm text-white text-xs font-medium">出金</span>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="withdrawal_amount" class="w-40 text-sm">出金金額</label>
+            <label for="withdrawal_amount" class="w-40 text-sm">金額</label>
             <div>
                 <input type="number" name="withdrawal_amount" value="{{ $withdrawalAmount }}" class="w-36 px-4 border-gray-200 rounded-lg" id="withdrawal_amount" /> 円
 @error('withdrawal_amount')
@@ -144,24 +144,23 @@ $exitDate = old('exit_date');
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="withdrawal_date" class="w-40 text-sm">出金日</label>
+            <label for="withdrawal_payment_site" class="w-40 text-sm">支払いサイト</label>
             <div>
-                <select name="withdrawal_date" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_date">
+                <select name="withdrawal_payment_site" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_payment_site">
                     <option value=""></option>
 
-@for ($i = 1; $i <= 31; $i++)
-                    <option value="{{ $i }}"@if($withdrawalDate == $i)' selected="selected"';@endif>{{ $i }}</option>
-@endfor
+@foreach (config('forms.paymentSite') as $key => $term)
+                    <option value="{{ $key }}"@if($withdrawalPaymentSite == $key)' selected="selected"';@endif>{{ $term }}日</option>
+@endforeach
 
                 </select>
-                日
-@error('withdrawal_date')
+@error('withdrawal_payment_site')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="withdrawal_irregular" class="w-40 text-sm">出金日が土日祝の場合</label>
+            <label for="withdrawal_irregular" class="w-40 text-sm">土日祝の場合</label>
             <div>
                 <select name="withdrawal_irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="withdrawal_irregular">
                     <option value=""></option>
@@ -177,7 +176,7 @@ $exitDate = old('exit_date');
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="withdrawal_bank" class="w-40 text-sm">出金銀行</label>
+            <label for="withdrawal_bank" class="w-40 text-sm">銀行</label>
             <div>
                 <input type="text" name="withdrawal_bank" value="{{ $withdrawalBank }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="withdrawal_bank" />
 @error('withdrawal_bank')

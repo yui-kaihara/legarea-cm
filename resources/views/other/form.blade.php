@@ -9,6 +9,7 @@ $amount = old('amount');
 $type = old('type');
 $date = old('date');
 $irregular = old('irregular');
+$startMonth = old('start_month');
 $bank = old('bank');
 @endphp
 
@@ -22,6 +23,7 @@ $bank = old('bank');
         $type = $otherData->type;
         $date = $otherData->date;
         $irregular = $otherData->irregular;
+        $startMonth = $otherData->start_month;
         $bank = $otherData->bank;
 @endphp
 @endisset
@@ -85,7 +87,7 @@ $bank = old('bank');
             </div>
         </div>
         <div class="flex items-baseline gap-2 mt-4">
-            <label for="irregular" class="w-40 text-sm">入出金日が土日祝の場合</label>
+            <label for="irregular" class="w-40 text-sm">土日祝の場合</label>
             <div>
                 <select name="irregular" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="irregular">
                     <option value=""></option>
@@ -96,6 +98,23 @@ $bank = old('bank');
 
                 </select>
 @error('irregular')
+                <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
+@enderror
+            </div>
+        </div>
+        <div class="flex items-baseline gap-2 mt-4">
+            <label for="start_month" class="w-40 text-sm">開始月</label>
+            <div>
+                <select name="start_month" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="start_month">
+                    <option value=""></option>
+
+@for ($i = 1; $i <= 12; $i++)
+                    <option value="{{ $i }}"@if($startMonth == $i)' selected="selected"';@endif>{{ $i }}</option>
+@endfor
+
+                </select>
+                月
+@error('start_month')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
             </div>

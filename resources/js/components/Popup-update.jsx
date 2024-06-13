@@ -6,7 +6,7 @@ const PopupUpdate = () => {
     const id = "popup-update";
 
     return (
-        <Popup id={id} />
+        <Popup id={id} path="/1" />
     );
 };
 

@@ -10,11 +10,26 @@ class OtherDataService
     /**
      * 一覧取得
      * 
+     * @param bool $groupByFlag
      * @return Collection
      */
-    public function getList()
+    public function getList(bool $groupByFlag = FALSE)
     {
         $otherDatas = OtherData::get();
+
+        if ($groupByFlag) {
+
+            //アクセサで支払日を取得
+            foreach ($otherDatas as $otherData) {
+                $otherData->payment_day = $otherData->payment_day;
+            }
+  
+            //支払日でグループ化し、キーに設定
+            $otherDatas = $otherDatas->groupBy('payment_day')->mapWithKeys(function ($items, $key) {
+                return [$key => $items];
+            });
+        }
+
         return $otherDatas;
     }
     

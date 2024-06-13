@@ -11,7 +11,7 @@ $forms = config('forms');
         </div>
         <table class="w-full border-collapse bg-white">
             <tr class="text-xs font-medium text-gray-600 text-center">
-                <th rowspan="3" class="px-3 border"></th>
+                <th rowspan="5" class="px-3 border"></th>
                 <th class="p-3 border w-1/3">会社名</th>
                 <td class="p-3 border w-2/3">{{ $sesData->company_name }}</td>
             </tr>
@@ -22,6 +22,14 @@ $forms = config('forms');
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">要員名</th>
                 <td class="p-3 border">{{ $sesData->personnel_name }}</td>
+            </tr>
+            <tr class="text-xs font-medium text-gray-600 text-center">
+                <th class="p-3 border">入場日</th>
+                <td class="p-3 border">{{ $sesData->admission_date->format('Y-m-d') }}</td>
+            </tr>
+            <tr class="text-xs font-medium text-gray-600 text-center">
+                <th class="p-3 border">退場日</th>
+                <td class="p-3 border">{{ ($sesData->exit_date) ? $sesData->exit_date->format('Y-m-d') : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th rowspan="4" class="px-3 border">入金</th>
@@ -47,7 +55,7 @@ $forms = config('forms');
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">出金日</th>
-                <td class="p-3 border">{{ $sesData->withdrawal_date }}</td>
+                <td class="p-3 border">{{ $sesData->withdrawal_date ? $sesData->withdrawal_date.'日' : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">出金日が土日祝の場合</th>
