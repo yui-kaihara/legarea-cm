@@ -48,6 +48,18 @@ class SesDataService
         $sesData = SesData::find($id);
         return $sesData;
     }
+    
+    /*
+     * 出金詳細を取得
+     *
+     * @param int $id
+     * @return SesData
+     */
+    public function getWithdrawalDetail(int $id)
+    {
+        $withdrawalData = SesData::where('deposit_id', '=', $id)->first();
+        return $withdrawalData;
+    }
 
     /**
      * 保存処理
@@ -66,11 +78,17 @@ class SesDataService
      * 
      * @param array $requests
      * @param int $id
+     * @param int $depositId
      * @return void
      */
-    public function update(array $requests, int $id)
+    public function update(array $requests, int $id = null, int $depositId = null)
     {
         $sesData = SesData::find($id);
+        
+        if ($depositId) {
+            $sesData = SesData::where('deposit_id', '=', $depositId)->first();
+        }
+
         $sesData->fill($requests)->save();
     }
     

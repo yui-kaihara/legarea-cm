@@ -33,37 +33,37 @@ $forms = config('forms');
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th rowspan="4" class="px-3 border">入金</th>
-                <th class="p-3 border">入金金額</th>
-                <td class="p-3 border">{{ $sesData->deposit_amount ? number_format($sesData->deposit_amount).'円' : ''; }}</td>
+                <th class="p-3 border">金額</th>
+                <td class="p-3 border">{{ number_format($sesData->deposit_amount) }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">支払いサイト</th>
-                <td class="p-3 border">{{ $sesData->payment_site ? $forms['paymentSite'][$sesData->payment_site].'日' : ''; }}</td>
+                <td class="p-3 border">{{ $forms['paymentSite'][$sesData->deposit_payment_site].'日' }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
-                <th class="p-3 border">入金日が土日祝の場合</th>
-                <td class="p-3 border">{{ $sesData->deposit_irregular ? $forms['irregular'][$sesData->deposit_irregular] : '' }}</td>
+                <th class="p-3 border">土日祝の場合</th>
+                <td class="p-3 border">{{ $forms['irregular'][$sesData->deposit_irregular] }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
-                <th class="p-3 border">入金銀行</th>
+                <th class="p-3 border">銀行</th>
                 <td class="p-3 border">{{ $sesData->deposit_bank }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th rowspan="4" class="px-3 border">出金</th>
-                <th class="p-3 border">出金金額</th>
-                <td class="p-3 border">{{ $sesData->withdrawal_amount ? number_format($sesData->withdrawal_amount).'円' : ''; }}</td>
+                <th class="p-3 border">金額</th>
+                <td class="p-3 border">{{ $withdrawalData ? number_format($withdrawalData->withdrawal_amount).'円' : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
-                <th class="p-3 border">出金日</th>
-                <td class="p-3 border">{{ $sesData->withdrawal_date ? $sesData->withdrawal_date.'日' : ''; }}</td>
+                <th class="p-3 border">支払いサイト</th>
+                <td class="p-3 border">{{ $withdrawalData->withdrawal_payment_site ? $forms['paymentSite'][$withdrawalData->withdrawal_payment_site].'日' : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
-                <th class="p-3 border">出金日が土日祝の場合</th>
-                <td class="p-3 border">{{ $sesData->withdrawal_irregular ? $forms['irregular'][$sesData->withdrawal_irregular] : '' }}</td>
+                <th class="p-3 border">土日祝の場合</th>
+                <td class="p-3 border">{{ $withdrawalData->withdrawal_irregular ? $forms['irregular'][$withdrawalData->withdrawal_irregular] : '' }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
-                <th class="p-3 border">出金銀行</th>
-                <td class="p-3 border">{{ $sesData->withdrawal_bank }}</td>
+                <th class="p-3 border">銀行</th>
+                <td class="p-3 border">{{ $withdrawalData->withdrawal_bank }}</td>
             </tr>
         </table>
     </div>

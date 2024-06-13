@@ -29,6 +29,7 @@
 $status = config('status');
 @endphp
 @foreach ($sesDatas as $sesData)
+@if (!$sesData->deposit_id)
                 <tr>
                     <td class="w-32 py-3 px-1">{{ $sesData->company_name }}</td>
                     <td class="w-56 py-3 px-1">{{ $sesData->case_name }}</td>
@@ -50,6 +51,7 @@ $status = config('status');
                         </div>
                     </td>
                 </tr>
+@endif
 @endforeach
             </tbody>
         </table>

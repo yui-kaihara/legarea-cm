@@ -73,7 +73,7 @@ class SesData extends Model
     public function getPaymentDayAttribute()
     {
         //支払予定日
-        $scheduleDay = $this->deposit_payment_site ? config('forms.paymentSite')[$this->deposit_payment_site] - 30 : config('forms.paymentSite')[$this->withdrawal_payment_site] - 30;
+        $scheduleDay = config('forms.paymentSite')[$this->deposit_payment_site] - 30;
         $scheduleDay = new DateTime(now()->format('Y-m').'-'.$scheduleDay);
         
         //支払いサイト30日の場合
@@ -110,11 +110,11 @@ class SesData extends Model
         if ($now >= $admissionDate) {
             
             //支払予定日
-            $scheduleDay = $this->payment_site ? config('forms.paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
+            $scheduleDay = config('forms.paymentSite')[$this->deposit_payment_site] - 30;
             $scheduleDay = new DateTime($this->admission_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
     
             //支払いサイト30日の場合
-            if ($this->payment_site == 1) {
+            if ($this->deposit_payment_site == 1) {
                 
                 //支払予定日（月の最終日）
                 $scheduleDay = new DateTime('last day of ' . $this->admission_date->modify('+1 month')->format('Y-m'));
@@ -148,11 +148,11 @@ class SesData extends Model
                     $status = ($now->format('Y-m') >= $firstPaymentDay->format('Y-m')) ? 7 : 6;
                     
                     //支払予定日
-                    $scheduleDay = $this->payment_site ? config('forms.paymentSite')[$this->payment_site] - 30 : $this->withdrawal_date;
+                    $scheduleDay = config('forms.paymentSite')[$this->deposit_payment_site] - 30;
                     $scheduleDay = new DateTime($this->exit_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
             
                     //支払いサイト30日の場合
-                    if ($this->payment_site == 1) {
+                    if ($this->deposit_payment_site == 1) {
                         
                         //支払予定日（月の最終日）
                         $scheduleDay = new DateTime('last day of ' . $this->exit_date->modify('+1 month')->format('Y-m'));

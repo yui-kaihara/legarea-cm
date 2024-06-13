@@ -17,6 +17,7 @@ $withdrawalAmount = old('withdrawal_amount');
 $withdrawalPaymentSite = old('withdrawal_payment_site');
 $withdrawalIrregular = old('withdrawal_irregular');
 $withdrawalBank = old('withdrawal_payment_site');
+$depositId = '';
 @endphp
 
 <!--更新画面-->
@@ -33,10 +34,11 @@ $withdrawalBank = old('withdrawal_payment_site');
         $depositPaymentSite = $sesData->deposit_payment_site;
         $depositIrregular = $sesData->deposit_irregular;
         $depositBank = $sesData->deposit_bank;
-        $withdrawalAmount = $sesData->withdrawal_amount;
-        $withdrawalPaymentSite = $sesData->withdrawal_payment_site;
-        $withdrawalIrregular = $sesData->withdrawal_irregular;
-        $withdrawalBank = $sesData->withdrawal_bank;
+        $withdrawalAmount = $withdrawalData->withdrawal_amount;
+        $withdrawalPaymentSite = $withdrawalData->withdrawal_payment_site;
+        $withdrawalIrregular = $withdrawalData->withdrawal_irregular;
+        $withdrawalBank = $withdrawalData->withdrawal_bank;
+        $depositId = $withdrawalData->deposit_id;
 @endphp
 @endisset
 
