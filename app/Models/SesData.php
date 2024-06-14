@@ -73,7 +73,7 @@ class SesData extends Model
     public function getPaymentDayAttribute()
     {
         //支払予定日
-        $scheduleDay = config('forms.paymentSite')[$this->deposit_payment_site] - 30;
+        $scheduleDay = $this->deposit_payment_site ? config('forms.paymentSite')[$this->deposit_payment_site] - 30 : config('forms.paymentSite')[$this->withdrawal_payment_site] - 30;
         $scheduleDay = new DateTime(now()->format('Y-m').'-'.$scheduleDay);
         
         //支払いサイト30日の場合
@@ -98,7 +98,10 @@ class SesData extends Model
     public function getStatusAttribute()
     {
         //現在
-        $now = new DateTime(now()->format('Y-m-d'));
+        $year = request()->input('year') ?? now()->format('Y');
+        $month = request()->input('month') ?? now()->format('m');
+        $day = request()->input('year') ? 31 : now()->format('d');
+        $now = new DateTime($year.'-'.$month.'-'.$day);
 
         //入場日
         $admissionDate = new DateTime($this->admission_date);
@@ -110,7 +113,7 @@ class SesData extends Model
         if ($now >= $admissionDate) {
             
             //支払予定日
-            $scheduleDay = config('forms.paymentSite')[$this->deposit_payment_site] - 30;
+            $scheduleDay = $this->deposit_payment_site ? config('forms.paymentSite')[$this->deposit_payment_site] - 30 : config('forms.paymentSite')[$this->withdrawal_payment_site] - 30;
             $scheduleDay = new DateTime($this->admission_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
     
             //支払いサイト30日の場合

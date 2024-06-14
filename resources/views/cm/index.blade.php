@@ -10,30 +10,30 @@
     <div class="w-11/12 lg:w-5/6 mx-auto pt-10 pb-20">
         <div class="flex justify-between items-center mb-2">
             <div class="flex items-end gap-3">
-                <form action="javascript:void(0)">
-                    @csrf
-                    <select name="year" class="w-24 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
+                <form action="" method="GET" class="flex items-baseline gap-2">
+                    <select name="year" class="w-24 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer">
 
 @php
 $year = now()->format('Y');
+$month = now()->format('n');
+$yearParam = request()->input('year') ?? $year;
+$monthParam = request()->input('month') ?? $month;
 @endphp
-@for ($i = $year - 1; $i <= $year; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
+@for ($i = $year; $i >= $year - 1; $i--)
+                        <option value="{{ $i }}"@if($i == $yearParam)' selected="selected"'@endif;>{{ $i }}</option>
 @endfor
 
                     </select>
                     年
-                </form>
-                <form action="javascript:void(0)">
-                    @csrf
-                    <select name="month" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer is-submit">
+                    <select name="month" class="w-16 mt-2 px-4 border-gray-200 rounded-lg cursor-pointer">
 
 @for ($i = 1; $i <= 12; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
+                        <option value="{{ $i }}"@if($i == $monthParam)' selected="selected"'@endif;>{{ $i }}</option>
 @endfor
 
                     </select>
                     月
+                    <input type="submit" value="表示" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline" />
                 </form>
             </div>
 
@@ -92,7 +92,7 @@ if ($sesDataCount || $otherDataCount) {
 @for ($j = 0; $j < $maxCount; $j++)
 
                 <tr class="{{ $bgColor }}text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" class="cursor-pointer" /></td>
+                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}" class="cursor-pointer is-check" /></td>
                     <td class="p-3 border">{{ $i }}</td>
 
 @if ($shopDatas->has($i))

@@ -39,12 +39,18 @@ const Popup = ({ id, path }) => {
     
     //csrfトークンを取得
     const csrfToken = document.querySelector("meta[name='csrf-token']");
+    
+    const checkedData = document.querySelectorAll("input[name=date]:checked");
+    let checkedValue = 0;
+    if (checkedData.length > 0) {
+        checkedValue = checkedData[0].value;
+    }
 
     return (
         <div>
             <button onClick={togglePopup} className="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">{submitText}</button>
             {show && (
-                <div className="absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs is-show">
+                <div className="absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs z-10">
                     <div class="flex justify-between items-start">
                         <p className="mb-5 font-semibold">2024-06-02</p>
                         <button onClick={togglePopup}>
@@ -53,7 +59,7 @@ const Popup = ({ id, path }) => {
                     </div>
                     <form action={url} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
-                        <input type="hidden" name="date" value="2024-06-02" />
+                        <input type="hidden" name="date" value={checkedValue} />
                         <div className="mb-10">
                             <span className="font-semibold">飲食</span>
                             <div className="flex gap-3 mt-2">

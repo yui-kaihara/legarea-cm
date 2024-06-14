@@ -27,7 +27,8 @@
                     <th class="w-40 py-3">金額</th>
                     <th class="w-40 py-3">入金種別</th>
                     <th class="w-40 py-3">入出金日</th>
-                    <th class="w-40 py-3">入出金日が土日祝の場合</th>
+                    <th class="w-40 py-3">土日祝の場合</th>
+                    <th class="w-40 py-3">開始月</th>
                     <th class="w-40 py-3">入出金銀行</th>
                     <th class="w-40 py-3"></th>
                 </tr>
@@ -39,12 +40,13 @@ $forms = config('forms');
 @endphp
 @foreach ($otherDatas as $otherData)
                 <tr>
-                    <td class="w-32 py-3 px-1">{{ $otherData->summaryItem[0]->name }}</td>
-                    <td class="w-56 py-3 px-1">{{ number_format($otherData->amount) }}</td>
-                    <td class="w-32 py-3 px-1">{{ $forms['type'][$otherData->type] }}</td>
-                    <td class="w-32 py-3 px-1">{{ $otherData->date }}日</td>
-                    <td class="w-32 py-3 px-1">{{ $forms['irregular'][$otherData->irregular] }}</td>
-                    <td class="w-32 py-3 px-1">{{ $otherData->bank }}</td>
+                    <td class="w-40 py-3 px-1">{{ $otherData->summaryItem[0]->name }}</td>
+                    <td class="w-40 py-3 px-1">{{ number_format($otherData->amount) }}</td>
+                    <td class="w-40 py-3 px-1">{{ $forms['type'][$otherData->type] }}</td>
+                    <td class="w-40 py-3 px-1">{{ $otherData->date }}日</td>
+                    <td class="w-40 py-3 px-1">{{ $forms['irregular'][$otherData->irregular] }}</td>
+                    <td class="w-40 py-3 px-1">{{ $otherData->start_month }}</td>
+                    <td class="w-40 py-3 px-1">{{ $otherData->bank }}</td>
                     <td class="w-40 py-3 px-1">
                         <div class="flex items-center gap-0.5 text-xs">
                             <a href="{{ route('other.edit', [$otherData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">

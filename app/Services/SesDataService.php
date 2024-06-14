@@ -23,11 +23,12 @@ class SesDataService
             foreach ($sesDatas as $index => $sesData) {
                 $sesData->payment_day = $sesData->payment_day;
 
+                //まだ入金が開始されていないデータは除外
                 if (!in_array($sesData->status, [3, 5, 7])) {
                     $sesDatas->forget($index);
                 }
             }
-  
+
             //支払日でグループ化し、キーに設定
             $sesDatas = $sesDatas->groupBy('payment_day')->mapWithKeys(function ($items, $key) {
                 return [$key => $items];

@@ -30,7 +30,7 @@ class OtherDataFormRequest extends FormRequest
             'type' => ['required', 'in:1,2'],
             'date' => ['required'],
             'irregular' => ['required', 'in:1,2'],
-            'startMonth' => ['required'],
+            'start_month' => ['required'],
             'bank' => ['required']
         ];
     }

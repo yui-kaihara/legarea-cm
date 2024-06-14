@@ -105,15 +105,7 @@ $bank = old('bank');
         <div class="flex items-baseline gap-2 mt-4">
             <label for="start_month" class="w-40 text-sm">開始月</label>
             <div>
-                <select name="start_month" class="w-20 px-4 border-gray-200 rounded-lg cursor-pointer" id="start_month">
-                    <option value=""></option>
-
-@for ($i = 1; $i <= 12; $i++)
-                    <option value="{{ $i }}"@if($startMonth == $i)' selected="selected"';@endif>{{ $i }}</option>
-@endfor
-
-                </select>
-                月
+                 <input type="month" name="start_month" value="{{ $startMonth }}" class="w-full md:w-36 px-4 border-gray-200 rounded-lg" id="start_month" />
 @error('start_month')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror

@@ -11,13 +11,19 @@ class OtherDataService
      * 一覧取得
      * 
      * @param bool $groupByFlag
+     * string $yearMonth
      * @return Collection
      */
-    public function getList(bool $groupByFlag = FALSE)
+    public function getList(bool $groupByFlag = FALSE, string $yearMonth = null)
     {
         $otherDatas = OtherData::get();
 
         if ($groupByFlag) {
+            
+            //表示する年月が開始月以降のデータのみ取得
+            if ($yearMonth) {
+                $otherDatas = $otherDatas->where('start_month', '>=', $yearMonth);
+            }
 
             //アクセサで支払日を取得
             foreach ($otherDatas as $otherData) {
