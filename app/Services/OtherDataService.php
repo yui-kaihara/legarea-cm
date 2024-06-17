@@ -22,14 +22,24 @@ class OtherDataService
             
             //表示する年月が開始月以降のデータのみ取得
             if ($yearMonth) {
-                $otherDatas = $otherDatas->where('start_month', '>=', $yearMonth);
+                $otherDatas = OtherData::where('start_month', '<=', $yearMonth);
             }
+            
+            //終了月が存在しないor終了月が存在し、表示する年月が終了月以前のデータのみ取得
+            $otherDatas->where(function ($query) use ($yearMonth) {
+                $query->where(function ($whereQuery) use ($yearMonth) {
+                    $whereQuery->whereNotNull('end_month');
+                    $whereQuery->where('end_month', '>=', $yearMonth);
+                })->orWhereNull('end_month');
+            });
+            
+            $otherDatas = $otherDatas->get();
 
             //アクセサで支払日を取得
             foreach ($otherDatas as $otherData) {
                 $otherData->payment_day = $otherData->payment_day;
             }
-  
+            
             //支払日でグループ化し、キーに設定
             $otherDatas = $otherDatas->groupBy('payment_day')->mapWithKeys(function ($items, $key) {
                 return [$key => $items];

@@ -11,6 +11,7 @@ $date = old('date');
 $irregular = old('irregular');
 $startMonth = old('start_month');
 $bank = old('bank');
+$endMonth = old('end_month');
 @endphp
 
 <!--更新画面-->
@@ -25,6 +26,7 @@ $bank = old('bank');
         $irregular = $otherData->irregular;
         $startMonth = $otherData->start_month;
         $bank = $otherData->bank;
+        $endMonth = $otherData->end_month;
 @endphp
 @endisset
 
@@ -116,6 +118,15 @@ $bank = old('bank');
             <div>
                 <input type="text" name="bank" value="{{ $bank }}" class="w-full md:w-96 px-4 border-gray-200 rounded-lg" id="bank" />
 @error('bank')
+                <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
+@enderror
+            </div>
+        </div>
+        <div class="flex items-baseline gap-2 mt-4">
+            <label for="end_month" class="w-40 text-sm">終了月</label>
+            <div>
+                 <input type="month" name="end_month" value="{{ $endMonth }}" class="w-full md:w-36 px-4 border-gray-200 rounded-lg" id="end_month" />
+@error('end_month')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
             </div>

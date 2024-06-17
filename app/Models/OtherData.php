@@ -37,7 +37,7 @@ class OtherData extends Model
      *
      * @array
      */
-    protected $fillable = ['summary_id', 'amount', 'type', 'date', 'irregular', 'start_month', 'bank'];
+    protected $fillable = ['summary_id', 'amount', 'type', 'date', 'irregular', 'start_month', 'bank', 'end_month'];
     
     /*
      * 支払日取得

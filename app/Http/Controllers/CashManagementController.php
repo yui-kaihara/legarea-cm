@@ -51,8 +51,8 @@ class CashManagementController extends Controller
     public function index(Request $request)
     {
         $year = $request->input('year') ?? now()->format('Y');
-        $month = $request->input('month') ?? now()->format('m');
-        
+        $month = $request->input('month') ? sprintf('%02d', $request->input('month')) : now()->format('m');
+
         //摘要項目一覧を取得
         $summaryItems = $this->summaryItemService->getList();
         

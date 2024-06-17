@@ -30,6 +30,7 @@
                     <th class="w-40 py-3">土日祝の場合</th>
                     <th class="w-40 py-3">開始月</th>
                     <th class="w-40 py-3">入出金銀行</th>
+                    <th class="w-40 py-3">終了月</th>
                     <th class="w-40 py-3"></th>
                 </tr>
             </thead>
@@ -47,6 +48,7 @@ $forms = config('forms');
                     <td class="w-40 py-3 px-1">{{ $forms['irregular'][$otherData->irregular] }}</td>
                     <td class="w-40 py-3 px-1">{{ $otherData->start_month }}</td>
                     <td class="w-40 py-3 px-1">{{ $otherData->bank }}</td>
+                    <td class="w-40 py-3 px-1">{{ $otherData->end_month }}</td>
                     <td class="w-40 py-3 px-1">
                         <div class="flex items-center gap-0.5 text-xs">
                             <a href="{{ route('other.edit', [$otherData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">
