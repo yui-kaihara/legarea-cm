@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     
     //CM表
     Route::resource('cm', CashManagementController::class);
+    Route::post('cm/download', [CashManagementController::class, 'download'])->name('cm.download');
     
     //SES
     Route::resource('ses', SesDataController::class);

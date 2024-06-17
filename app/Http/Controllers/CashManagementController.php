@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CashManagementFormRequest;
 use App\Models\SesData;
+use App\Services\FileOperateService;
 use App\Services\IrregularOtherDataService;
 use App\Services\IrregularSesDataService;
 use App\Services\OtherDataService;
@@ -18,14 +19,16 @@ class CashManagementController extends Controller
     /**
      * コンストラクタ
      * 
-     * @param irregularOtherDataService $irregularOtherDataService
-     * @param irregularSesDataService $irregularSesDataService
+     * @param FileOperateService $fileOperateService
+     * @param IrregularOtherDataService $irregularOtherDataService
+     * @param IrregularSesDataService $irregularSesDataService
      * @param OtherDataService $otherDataService
      * @param SesDataService $sesDataService
      * @param ShopDataService $shopDataService
      * @param SummaryItemService $summaryItemService
      */
     public function __construct(
+        FileOperateService $fileOperateService,
         IrregularOtherDataService $irregularOtherDataService,
         IrregularSesDataService $irregularSesDataService,
         OtherDataService $otherDataService,
@@ -34,6 +37,7 @@ class CashManagementController extends Controller
         SummaryItemService $summaryItemService
     )
     {
+        $this->fileOperateService = $fileOperateService;
         $this->irregularOtherDataService = $irregularOtherDataService;
         $this->irregularSesDataService = $irregularSesDataService;
         $this->otherDataService = $otherDataService;
@@ -52,21 +56,22 @@ class CashManagementController extends Controller
     {
         $year = $request->input('year') ?? now()->format('Y');
         $month = $request->input('month') ? sprintf('%02d', $request->input('month')) : now()->format('m');
+        $yearMonth = $year.'-'.$month;
 
         //摘要項目一覧を取得
         $summaryItems = $this->summaryItemService->getList();
         
         //飲食データを取得
-        $shopDatas = $this->shopDataService->getList($year.'-'.$month);
+        $shopDatas = $this->shopDataService->getList($yearMonth);
 
         //SESデータを取得
         $sesDatas = $this->sesDataService->getList(TRUE);
-        $irregularSesDatas = $this->irregularSesDataService->getList($year.'-'.$month); //非定常SESデータを取得
+        $irregularSesDatas = $this->irregularSesDataService->getList($yearMonth); //非定常SESデータを取得
         $sesDatas = $sesDatas->union($irregularSesDatas); //SESデータを結合
         
         //その他データを取得
-        $otherDatas = $this->otherDataService->getList(TRUE, $year.'-'.$month);
-        $irregularOtherDatas = $this->irregularOtherDataService->getList($year.'-'.$month); //非定常その他データを取得
+        $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
+        $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth); //非定常その他データを取得
         $otherDatas = $otherDatas->union($irregularOtherDatas); //SESデータを結合
 
         return view('cm.index')->with([
@@ -170,5 +175,34 @@ class CashManagementController extends Controller
     public function destroy(CashManagement $cashManagement)
     {
         //
+    }
+    
+    /**
+     * ダウンロード
+     * 
+     * @param Request $request
+     * @return void
+     */
+    public function download(Request $request)
+    {
+        $year = $request->input('year') ?? now()->format('Y');
+        $month = $request->input('month') ? sprintf('%02d', $request->input('month')) : now()->format('m');
+        $yearMonth = $year.'-'.$month;
+        
+        //飲食データを取得
+        $shopDatas = $this->shopDataService->getList($yearMonth);
+
+        //SESデータを取得
+        $sesDatas = $this->sesDataService->getList(TRUE);
+        $irregularSesDatas = $this->irregularSesDataService->getList($yearMonth); //非定常SESデータを取得
+        $sesDatas = $sesDatas->union($irregularSesDatas); //SESデータを結合
+        
+        //その他データを取得
+        $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
+        $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth); //非定常その他データを取得
+        $otherDatas = $otherDatas->union($irregularOtherDatas); //SESデータを結合
+
+        //Excelダウンロード
+        $this->fileOperateService->download($shopDatas, $sesDatas, $otherDatas);
     }
 }
