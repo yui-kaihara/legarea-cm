@@ -18,6 +18,7 @@ $year = now()->format('Y');
 $month = now()->format('n');
 $yearParam = request()->input('year') ?? $year;
 $monthParam = request()->input('month') ?? $month;
+$dayParam = request()->input('day') ?? 0;
 @endphp
 @for ($i = $year; $i >= $year - 1; $i--)
                         <option value="{{ $i }}"@if($i == $yearParam)' selected="selected"'@endif;>{{ $i }}</option>
@@ -41,11 +42,15 @@ $monthParam = request()->input('month') ?? $month;
 $type = trim(implode(',', config('forms.type')), "'");
 $summaryItemName = trim(implode(',', $summaryItems->pluck('name')->all()), "'");
 $summaryItemId = trim(implode(',', $summaryItems->pluck('id')->all()), "'");
+$sesData = '';
+if ($sesDatas->has($dayParam)) {
+    $sesData = trim(implode(',', $sesDatas[$dayParam]->all()), "'");
+}
 @endphp
 
             <div class="flex gap-1 mt-1">
-                <div id="popup-register" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="登録"></div>
-                <div id="popup-update" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="編集"></div>
+                <div id="popup-register" data-year-month="{{ $yearParam.'-'.$monthParam }}" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="登録" data-ses-data="{{ $sesData }}"></div>
+                <div id="popup-update" data-year-month="{{ $yearParam.'-'.$monthParam }}" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="編集" data-ses-data="{{ $sesData }}"></div>
                 <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">削除</a>
                 <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">ダウンロード</a>
             </div>
@@ -92,10 +97,10 @@ if ($sesDataCount || $otherDataCount) {
 @for ($j = 0; $j < $maxCount; $j++)
 
                 <tr class="{{ $bgColor }}text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}" class="cursor-pointer is-check" /></td>
+                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer is-check" /></td>
                     <td class="p-3 border">{{ $i }}</td>
 
-@if ($shopDatas->has($i))
+@if ($shopDatas->has($i) && ($j === 0))
                     <td class="p-3 border">{{ number_format($shopDatas[$i]->sales1) }}</td>
                     <td class="p-3 border">{{ number_format($shopDatas[$i]->sales2) }}</td>
 @else
@@ -103,12 +108,12 @@ if ($sesDataCount || $otherDataCount) {
                     <td class="p-3 border"></td>
 @endif
 
-@if ($sesDatas->has($i))
+@if ($sesDatas->has($i) && ($sesDataCount > $j))
                     <td class="p-3 border">{{ $sesDatas[$i][$j]->company_name }}</td>
                     <td class="p-3 border">{{ $sesDatas[$i][$j]->personnel_name }}</td>
-                    <td class="p-3 border">{{ ($sesDatas[$i][$j]->deposit_amount) ? '入金' : '出金'; }}</td>
-                    <td class="p-3 border">{{ ($sesDatas[$i][$j]->deposit_amount) ? number_format($sesDatas[$i][$j]->deposit_amount) : number_format($sesDatas[$i][$j]->withdrawal_amount); }}</td>
-                    <td class="p-3 border">{{ ($sesDatas[$i][$j]->deposit_bank) ?? ($sesDatas[$i][$j]->withdrawal_bank); }}</td>
+                    <td class="p-3 border">{{ config('forms.type')[$sesDatas[$i][$j]->type] }}</td>
+                    <td class="p-3 border">{{ number_format($sesDatas[$i][$j]->amount) }}</td>
+                    <td class="p-3 border">{{ $sesDatas[$i][$j]->bank }}</td>
 @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>
@@ -117,7 +122,7 @@ if ($sesDataCount || $otherDataCount) {
                     <td class="p-3 border"></td>
 @endif
 
-@if ($otherDatas->has($i))
+@if ($otherDatas->has($i) && ($otherDataCount > $j))
                     <td class="p-3 border">{{ $otherDatas[$i][$j]->summaryItem[0]->name }}</td>
                     <td class="p-3 border">{{ number_format($otherDatas[$i][$j]->amount) }}</td>
                     <td class="p-3 border">{{ config('forms.type')[$otherDatas[$i][$j]->type] }}</td>

@@ -64,6 +64,28 @@ class SesData extends Model
         'withdrawal_bank',
         'deposit_id'
     ];
+    
+    /*
+     * 金額取得
+     * 
+     * @return int
+     */
+    public function getAmountAttribute()
+    {
+        $amount = $this->deposit_amount ?? $this->withdrawal_amount;
+        return $amount;
+    }
+    
+    /*
+     * 銀行取得
+     * 
+     * @return string
+     */
+    public function getBankAttribute()
+    {
+        $bank = $this->deposit_bank ?? $this->withdrawal_bank;
+        return $bank;
+    }
 
     /*
      * 支払日取得
@@ -177,12 +199,23 @@ class SesData extends Model
     }
     
     /*
-     * 飲食データを取得
-     *
-     * @return App\Models\ShopData
+     * 入金種別を取得
+     * 
+     * @return int
      */
-    public function shopData()
+    public function getTypeAttribute()
     {
-        return $this->hasOne(ShopData::class);
+        $type = $this->deposit_amount ? 1 : 2;
+        return $type;
+    }
+    
+    /*
+     * 非定常SESデータを取得
+     *
+     * @return App\Models\IrregularSesData
+     */
+    public function irregularSesData()
+    {
+        return $this->hasOne(IrregularSesData::class);
     }
 }

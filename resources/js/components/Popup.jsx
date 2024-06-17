@@ -7,6 +7,9 @@ const Popup = ({ id, path }) => {
         setShow(!show);
     };
 
+    //SESデータ取得
+    const sesData = document.getElementById(id).getAttribute('data-ses-data');
+
     //入力値
     const [stateSales1, setStateSales1] = useState("");
     const [stateSales2, setStateSales2] = useState("");
@@ -30,7 +33,7 @@ const Popup = ({ id, path }) => {
     summaryItemIds.forEach((key, index) => {
         summaryItems[key] = summaryItemNames[index];
     });
-    
+
     //送信ボタンの文言を取得
     const submitText = document.getElementById(id).getAttribute('data-submit-text');
     
@@ -40,10 +43,20 @@ const Popup = ({ id, path }) => {
     //csrfトークンを取得
     const csrfToken = document.querySelector("meta[name='csrf-token']");
     
+    //チェックされた日付を取得
+    const yearMonth = document.getElementById(id).getAttribute('data-year-month');
     const checkedData = document.querySelectorAll("input[name=date]:checked");
     let checkedValue = 0;
+
     if (checkedData.length > 0) {
         checkedValue = checkedData[0].value;
+        
+        //URLにパラメータを追加
+        const params = new URLSearchParams(window.location.search);
+        params.set('day', checkedValue.split('')[0]);
+        params.set('data', checkedValue.split('')[2]);
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
     }
 
     return (
@@ -52,7 +65,7 @@ const Popup = ({ id, path }) => {
             {show && (
                 <div className="absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs z-10">
                     <div class="flex justify-between items-start">
-                        <p className="mb-5 font-semibold">2024-06-02</p>
+                        <p className="mb-5 font-semibold">{yearMonth + '-' + checkedValue.split('')[0]}</p>
                         <button onClick={togglePopup}>
                         <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
                     </button>

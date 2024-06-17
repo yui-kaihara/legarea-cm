@@ -57,13 +57,13 @@ class OtherData extends Model
     }
     
     /*
-     * 飲食データを取得
+     * 非定常その他データを取得
      *
-     * @return App\Models\ShopData
+     * @return App\Models\IrregularOtherData
      */
-    public function shopData()
+    public function irregularOtherData()
     {
-        return $this->hasOne(ShopData::class);
+        return $this->hasOne(IrregularOtherData::class);
     }
     
     /*
