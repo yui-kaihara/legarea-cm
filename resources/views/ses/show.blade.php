@@ -6,8 +6,14 @@ $forms = config('forms');
 @endphp
     <div class="w-auto md:w-3/5 xl:w-2/5 mx-3 md:mx-auto py-10">
         <div class="flex justify-end gap-2 mb-2">
-            <a href="{{ route('ses.index') }}" class="inline-block w-24 cursor-pointer py-2 px-3 text-center text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">一覧</a>
-            <a href="{{ route('ses.edit', [$sesData]) }}" class="inline-block w-24 cursor-pointer py-2 px-3 text-center text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">編集</a>
+            <a href="{{ route('ses.index') }}" class="inline-block flex justify-center items-center gap-1 w-24 cursor-pointer py-2 px-3 text-center text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
+                <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 11l-4 4l4 4m-4 -4h11a4 4 0 0 0 0 -8h-1" /></svg>
+                一覧
+            </a>
+            <a href="{{ route('ses.edit', [$sesData]) }}" class="inline-block flex justify-center items-center gap-1 w-24 cursor-pointer py-2 px-3 text-center text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
+                <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>
+                編集
+            </a>
         </div>
         <table class="w-full border-collapse bg-white">
             <tr class="text-xs font-medium text-gray-600 text-center">
