@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use DateTime;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 use Illuminate\Support\Collection;
 
@@ -15,22 +17,41 @@ class FileOperateService
      * @param Collection $shopDatas
      * @param Collection $sesDatas
      * @param Collection $otherDatas
+     * @param string $yearMonth
      * @return void
      */
-    public function download(Collection $shopDatas, Collection $sesDatas, Collection $otherDatas)
+    public function download(Collection $shopDatas, Collection $sesDatas, Collection $otherDatas, string $yearMonth)
     {
         $spreadsheet = new Spreadsheet();
         
-        //全体のフォント設定
+        //フォント設定
         $spreadsheet->getDefaultStyle()->getFont()->setName('MS Pゴシック');
+        
+        //中央揃え
+        $spreadsheet->getDefaultStyle()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);   
         
         //処理したいシートを取得
         $sheet = $spreadsheet->getActiveSheet();
         
+        //大項目を設定
+        $sheet->setCellValue('A1', '日付');
+        $sheet->setCellValue('B1', '飲食');
+        $sheet->mergeCells('B1:C1');
+        $sheet->setCellValue('D1', 'SES');
+        $sheet->mergeCells('D1:H1');
+        $sheet->setCellValue('I1', 'その他');
+        $sheet->mergeCells('I1:L1');
+        $sheet->setCellValue('M1', '実残高');
+        
         //書き込みデータを準備
-        $writeDatas = [['', '○○店', '○○店', '会社名', '要員名', '入金種別', '金額', '入出金銀行', '摘要', '金額', '入金種別', '入出金銀行', '実残高']];
+        $writeDatas = [['', '○○店', '○○店', '会社名', '要員名', '入金種別', '金額', '入出金銀行', '摘要', '金額', '入金種別', '入出金銀行', '']];
+        
+        //月の最終日を取得
+        $lastDay = new DateTime('last day of '.$yearMonth);
 
-        for ($i = 1; $i <= 31; $i++) {
+        for ($i = 1; $i <= $lastDay->format('j'); $i++) {
+            
+            //各日付の最大要素数を取得
             $maxCount = 1;
             $sesDataCount = $sesDatas->has($i) ? $sesDatas[$i]->count() : 0;
             $otherDataCount = $otherDatas->has($i) ? $otherDatas[$i]->count() : 0;
@@ -80,25 +101,26 @@ class FileOperateService
                     ];
                 }
                 $addWriteDatas = array_merge($addWriteDatas, $otherWriteDatas);
+                
+                //実残高
+                $writeDatas[] = array_merge($addWriteDatas, [number_format(5000000)]);
             }
-
-            //実残高
-            $writeDatas[] = array_merge($addWriteDatas, [number_format(5000000)]);
         }
 
         $sheet->fromArray($writeDatas, null, 'A2');
         
-        for ($i = 'A'; $i != 'M'; $i++) {
+        for ($i = 'A'; $i != 'N'; $i++) {
             
             //セル幅自動調整
             $sheet->getColumnDimension($i)->setAutoSize(true);
-            
+   
             //太字
             $sheet->getStyle($i.'1')->getFont()->setBold(true)->setSize(10);
+            $sheet->getStyle($i.'2')->getFont()->setBold(true)->setSize(10);
         }
 
         //ファイル名を設定
-        $fileName = 'CM表.xlsx';
+        $fileName = 'CM表_'.str_replace('-', '', $yearMonth).'.xlsx';
 
         //Excelファイルをダウンロード
         $writer = new XlsxWriter($spreadsheet);

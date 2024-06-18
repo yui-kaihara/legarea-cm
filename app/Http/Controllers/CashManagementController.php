@@ -73,12 +73,16 @@ class CashManagementController extends Controller
         $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
         $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth); //非定常その他データを取得
         $otherDatas = $otherDatas->union($irregularOtherDatas); //SESデータを結合
+        
+        //月の最終日を取得
+        $lastDay = new DateTime('last day of '.$yearMonth);
 
         return view('cm.index')->with([
             'summaryItems' => $summaryItems,
             'shopDatas' => $shopDatas,
             'sesDatas' => $sesDatas,
-            'otherDatas' => $otherDatas
+            'otherDatas' => $otherDatas,
+            'lastDay' => $lastDay->format('j')
         ]);
     }
 
@@ -203,6 +207,6 @@ class CashManagementController extends Controller
         $otherDatas = $otherDatas->union($irregularOtherDatas); //SESデータを結合
 
         //Excelダウンロード
-        $this->fileOperateService->download($shopDatas, $sesDatas, $otherDatas);
+        $this->fileOperateService->download($shopDatas, $sesDatas, $otherDatas, $yearMonth);
     }
 }

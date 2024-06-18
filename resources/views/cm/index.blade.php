@@ -94,7 +94,7 @@ if ($sesDatas->has($dayParam)) {
                 </tr>
             </thead>
             <tbody>
-@for ($i = 1; $i <= 31; $i++)
+@for ($i = 1; $i <= $lastDay; $i++)
 @php
 $bgColor = ($i % 2 === 1) ? 'bg-gray-50 ' : '';
 $maxCount = 1;

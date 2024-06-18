@@ -102,7 +102,7 @@ class SesData extends Model
         if ($this->deposit_payment_site == 1) {
             
             //支払予定日（月の最終日）
-            $scheduleDay = new DateTime('last day of ' . now()->format('Y-m'));
+            $scheduleDay = new DateTime('last day of '.now()->format('Y-m'));
         }
 
         //最終支払日を取得
