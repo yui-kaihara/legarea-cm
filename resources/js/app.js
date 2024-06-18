@@ -12,6 +12,5 @@ import './bootstrap';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import './components/Example';
 import './components/Popup-register';
 import './components/Popup-update';
