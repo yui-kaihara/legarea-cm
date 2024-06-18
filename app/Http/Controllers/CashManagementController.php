@@ -103,11 +103,8 @@ class CashManagementController extends Controller
     public function store(CashManagementFormRequest $request)
     {
         $requests = $request->all();
-        
-        $year = $request->input('year') ?? now()->format('Y');
-        $month = $request->input('month') ?? now()->format('m');
-        $date = new DateTime($year.'-'.$month.'-'.$requests['date']);
-        
+        $date = new DateTime($requests['select_date']);
+
         //飲食データ登録
         if ($requests['sales1']) {
             
@@ -170,7 +167,9 @@ class CashManagementController extends Controller
      */
     public function update(Request $request, CashManagement $cashManagement)
     {
-        //
+        $year = $request->input('year') ?? now()->format('Y');
+        $month = $request->input('month') ?? now()->format('m');
+        $date = new DateTime($year.'-'.$month.'-'.$requests['date']);
     }
 
     /**

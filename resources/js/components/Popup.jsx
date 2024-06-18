@@ -11,6 +11,7 @@ const Popup = ({ id, path }) => {
     const sesData = document.getElementById(id).getAttribute('data-ses-data');
 
     //入力値
+    const [stateSelectDate, setStateSelectDate] = useState("");
     const [stateSales1, setStateSales1] = useState("");
     const [stateSales2, setStateSales2] = useState("");
     const [stateCompanyName, setStateCompanyName] = useState("");
@@ -61,8 +62,21 @@ const Popup = ({ id, path }) => {
     
     //ボタンのアイコンを設定
     let icon = <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="4" y="4" width="16" height="16" rx="2" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>;
+    
+    //日付
+    let date = '';
+    
+    //日付選択フォーム
+    let dateForm = <div className="mb-10"><span className="font-semibold">日付</span><input type="date" name="select_date" value={stateSelectDate} onChange={(e) => setStateSelectDate(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /></div>;
+
     if (id == 'popup-update') {
         icon = <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>;
+        
+        if (checkedData.length > 0) {
+            date = yearMonth + '-' + checkedValue.split('')[0];
+        }
+
+        dateForm = '';
     }
 
     return (
@@ -74,7 +88,7 @@ const Popup = ({ id, path }) => {
             {show && (
                 <div className="absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs z-10">
                     <div class="flex justify-between items-start">
-                        <p className="mb-5 font-semibold">{yearMonth + '-' + checkedValue.split('')[0]}</p>
+                        <p className="mb-5 font-semibold">{date}</p>
                         <button onClick={togglePopup}>
                             <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
                         </button>
@@ -82,6 +96,7 @@ const Popup = ({ id, path }) => {
                     <form action={url} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
                         <input type="hidden" name="date" value={checkedValue} />
+                        {dateForm}
                         <div className="mb-10">
                             <span className="font-semibold">飲食</span>
                             <div className="flex gap-3 mt-2">
