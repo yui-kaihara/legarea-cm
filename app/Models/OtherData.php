@@ -6,6 +6,7 @@ use App\Services\CalcPaymentDayService;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class OtherData extends Model
 {
@@ -63,7 +64,15 @@ class OtherData extends Model
      */
     public function irregularOtherData()
     {
-        return $this->hasOne(IrregularOtherData::class);
+        $year = request()->input('year') ?? now()->format('Y');
+        $month = request()->input('month') ?? now()->format('n');
+        $yearMonth = $year.'-'.$month;
+        
+        $otherData = $this->hasOne(IrregularOtherData::class);
+        $otherData->whereYear('date', Carbon::parse($yearMonth)->year);
+        $otherData->whereMonth('date', Carbon::parse($yearMonth)->month);
+        
+        return $otherData;
     }
     
     /*

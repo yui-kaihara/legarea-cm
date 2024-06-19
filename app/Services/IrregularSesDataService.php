@@ -21,6 +21,7 @@ class IrregularSesDataService
         $query->selectRaw('DAY(date) as day');
         $query->whereYear('date', Carbon::parse($yearMonth)->year);
         $query->whereMonth('date', Carbon::parse($yearMonth)->month);
+        $query->whereNull('ses_data_id');
         
         //日にちでグループ化し、キーに設定して取得
         $irregularSesDatas = $query->get()->groupBy('day')->mapWithKeys(function ($items, $key) {

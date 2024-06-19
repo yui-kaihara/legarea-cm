@@ -36,7 +36,7 @@ class IrregularOtherData extends Model
      *
      * @array
      */
-    protected $fillable = ['date', 'summary_id', 'amount', 'type', 'bank'];
+    protected $fillable = ['date', 'summary_id', 'amount', 'type', 'bank', 'other_data_id'];
     
     /*
      * その他データを取得

@@ -6,6 +6,7 @@ use App\Services\CalcPaymentDayService;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class SesData extends Model
@@ -216,6 +217,14 @@ class SesData extends Model
      */
     public function irregularSesData()
     {
-        return $this->hasOne(IrregularSesData::class);
+        $year = request()->input('year') ?? now()->format('Y');
+        $month = request()->input('month') ?? now()->format('n');
+        $yearMonth = $year.'-'.$month;
+        
+        $sesData = $this->hasOne(IrregularSesData::class);
+        $sesData->whereYear('date', Carbon::parse($yearMonth)->year);
+        $sesData->whereMonth('date', Carbon::parse($yearMonth)->month);
+        
+        return $sesData;
     }
 }

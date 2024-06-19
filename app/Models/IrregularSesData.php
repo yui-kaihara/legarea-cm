@@ -53,7 +53,8 @@ class IrregularSesData extends Model
         'personnel_name',
         'type',
         'amount',
-        'bank'
+        'bank',
+        'ses_data_id'
     ];
     
     /*

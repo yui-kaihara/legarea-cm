@@ -149,11 +149,14 @@ if ($sesDataCount || $otherDataCount) {
 @endif
 
 @if ($sesDatas->has($i) && ($sesDataCount > $j))
-                    <td class="p-3 border">{{ $sesDatas[$i][$j]->company_name }}</td>
-                    <td class="p-3 border">{{ $sesDatas[$i][$j]->personnel_name }}</td>
-                    <td class="p-3 border">{{ config('forms.type')[$sesDatas[$i][$j]->type] }}</td>
-                    <td class="p-3 border">{{ number_format($sesDatas[$i][$j]->amount) }}</td>
-                    <td class="p-3 border">{{ $sesDatas[$i][$j]->bank }}</td>
+@php
+$sesData = $sesDatas[$i][$j]->irregularSesData ?? $sesDatas[$i][$j];
+@endphp
+                    <td class="p-3 border">{{ $sesData->company_name }}</td>
+                    <td class="p-3 border">{{ $sesData->personnel_name }}</td>
+                    <td class="p-3 border">{{ config('forms.type')[$sesData->type] }}</td>
+                    <td class="p-3 border">{{ number_format($sesData->amount) }}</td>
+                    <td class="p-3 border">{{ $sesData->bank }}</td>
 @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>
@@ -163,10 +166,13 @@ if ($sesDataCount || $otherDataCount) {
 @endif
 
 @if ($otherDatas->has($i) && ($otherDataCount > $j))
-                    <td class="p-3 border">{{ $otherDatas[$i][$j]->summaryItem[0]->name }}</td>
-                    <td class="p-3 border">{{ number_format($otherDatas[$i][$j]->amount) }}</td>
-                    <td class="p-3 border">{{ config('forms.type')[$otherDatas[$i][$j]->type] }}</td>
-                    <td class="p-3 border">{{ $otherDatas[$i][$j]->bank }}</td>
+@php
+$otherData = $otherDatas[$i][$j]->irregularOtherData ?? $otherDatas[$i][$j];
+@endphp
+                    <td class="p-3 border">{{ $otherData->summaryItem[0]->name }}</td>
+                    <td class="p-3 border">{{ number_format($otherData->amount) }}</td>
+                    <td class="p-3 border">{{ config('forms.type')[$otherData->type] }}</td>
+                    <td class="p-3 border">{{ $otherData->bank }}</td>
 @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>
