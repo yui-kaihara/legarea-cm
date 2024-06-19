@@ -38,6 +38,7 @@ class OtherDataService
             //アクセサで支払日を取得
             foreach ($otherDatas as $otherData) {
                 $otherData->payment_day = $otherData->payment_day;
+                $otherData->irregularFlag = FALSE;
             }
             
             //支払日でグループ化し、キーに設定

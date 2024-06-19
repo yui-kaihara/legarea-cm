@@ -17,7 +17,7 @@ class ShopDataService
     public function getList(string $yearMonth)
     {
         //取得するカラムを設定
-        $query = ShopData::select('sales1', 'sales2');
+        $query = ShopData::select('id', 'sales1', 'sales2');
         $query->selectRaw('DAY(date) as day');
         $query->whereYear('date', Carbon::parse($yearMonth)->year);
         $query->whereMonth('date', Carbon::parse($yearMonth)->month);

@@ -17,7 +17,7 @@ class IrregularSesDataService
      */
     public function getList(string $yearMonth)
     {
-        $query = IrregularSesData::select('company_name', 'personnel_name', 'type', 'amount', 'bank');
+        $query = IrregularSesData::select('id', 'company_name', 'personnel_name', 'type', 'amount', 'bank');
         $query->selectRaw('DAY(date) as day');
         $query->whereYear('date', Carbon::parse($yearMonth)->year);
         $query->whereMonth('date', Carbon::parse($yearMonth)->month);
@@ -27,6 +27,12 @@ class IrregularSesDataService
             return [$key => $items];
         });
         
+        foreach ($irregularSesDatas as $irregularSesData) {
+            foreach ($irregularSesData as $data) {
+                $data->irregularFlag = TRUE;
+            }
+        }
+
         return $irregularSesDatas;
     }
     

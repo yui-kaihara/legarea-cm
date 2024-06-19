@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Popup = ({ id, path }) => {
+const Popup = ({ id, path, method }) => {
     const [show, setShow] = useState(false);
 
     //ポップアップ開閉
@@ -14,12 +14,15 @@ const Popup = ({ id, path }) => {
         let checkedValue = 0;
     
         if (checkedData.length == 1) {
-            checkedValue = checkedData[0].value;
-            
+            checkedValue = checkedData[0].value.split('-');
+            const yearMonth = document.getElementById(id).getAttribute('data-year-month').split('-');
+
             //URLにパラメータを追加
             const params = new URLSearchParams({
-                day: checkedValue.split('')[0],
-                data: checkedValue.split('')[2],
+                year: yearMonth[0],
+                month: yearMonth[1],
+                day: checkedValue[0],
+                data: checkedValue[1],
                 popup: 'true'
             }).toString();
             window.location.search = `?${params}`;
@@ -108,35 +111,43 @@ const Popup = ({ id, path }) => {
     //チェックされた日付を取得
     const yearMonth = document.getElementById(id).getAttribute('data-year-month');
     const day = new URLSearchParams(window.location.search).get('day');
+    
+    //飲食店データ取得
+    const shopData = document.getElementById(id).getAttribute('data-shop-data').split(',');
+    
+    //SESデータ取得
+    const sesData = document.getElementById(id).getAttribute('data-ses-data').split(',');
+    
+    //その他データ取得
+    const otherData = document.getElementById(id).getAttribute('data-other-data').split(',');
 
     if (id == 'popup-update') {
         icon = <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>;
         
         if (day) {
-            date = yearMonth + '-' + day.split('')[0];
+            date = yearMonth + '-' + day;
         }
 
         dateForm = '';
         
-        //SESデータ取得
-        const sesData = document.getElementById(id).getAttribute('data-ses-data').split(',');
+        if (shopData.length > 0) {
+            [stateSales1, setStateSales1] = useState(shopData[1]);
+            [stateSales2, setStateSales2] = useState(shopData[2]);
+        }
 
         if (sesData.length > 0) {
-            [stateCompanyName, setStateCompanyName] = useState(sesData[0]);
-            [statePersonnelName, setStatePersonnelName] = useState(sesData[1]);
-            [stateSesType, setStateSesType] = useState(sesData[2]);
-            [stateSesAmount, setStateSesAmount] = useState(sesData[3]);
-            [stateSesBank, setStateSesBank] = useState(sesData[4]);
+            [stateCompanyName, setStateCompanyName] = useState(sesData[1]);
+            [statePersonnelName, setStatePersonnelName] = useState(sesData[2]);
+            [stateSesType, setStateSesType] = useState(sesData[3]);
+            [stateSesAmount, setStateSesAmount] = useState(sesData[4]);
+            [stateSesBank, setStateSesBank] = useState(sesData[5]);
         }
-        
-        //その他データ取得
-        const otherData = document.getElementById(id).getAttribute('data-other-data').split(',');
-        
+
         if (otherData.length > 0) {
-            [stateSummaryId, setStateSummaryId] = useState(otherData[0]);
-            [stateOtherAmount, setStateOtherAmount] = useState(otherData[1]);
-            [stateOtherType, setStateOtherType] = useState(otherData[2]);
-            [stateOtherBank, setStateOtherBank] = useState(otherData[3]);
+            [stateSummaryId, setStateSummaryId] = useState(otherData[1]);
+            [stateOtherAmount, setStateOtherAmount] = useState(otherData[2]);
+            [stateOtherType, setStateOtherType] = useState(otherData[3]);
+            [stateOtherBank, setStateOtherBank] = useState(otherData[4]);
         }
     }
 
@@ -156,7 +167,13 @@ const Popup = ({ id, path }) => {
                     </div>
                     <form action={url} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
+                        {method}
                         <input type="hidden" name="date" value={date} />
+                        <input type="hidden" name="shop_id" value={shopData[0]} />
+                        <input type="hidden" name="ses_id" value={sesData[0]} />
+                        <input type="hidden" name="ses_irregular" value={sesData[6]} />
+                        <input type="hidden" name="other_id" value={otherData[0]} />
+                        <input type="hidden" name="other_irregular" value={otherData[5]} />
                         {dateForm}
                         <div className="mb-10">
                             <span className="font-semibold">飲食</span>

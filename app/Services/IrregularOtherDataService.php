@@ -17,7 +17,7 @@ class IrregularOtherDataService
      */
     public function getList(string $yearMonth)
     {
-        $query = IrregularOtherData::select('summary_id', 'amount', 'type', 'bank');
+        $query = IrregularOtherData::select('id', 'summary_id', 'amount', 'type', 'bank');
         $query->selectRaw('DAY(date) as day');
         $query->whereYear('date', Carbon::parse($yearMonth)->year);
         $query->whereMonth('date', Carbon::parse($yearMonth)->month);
@@ -26,6 +26,12 @@ class IrregularOtherDataService
         $irregularOtherDatas = $query->get()->groupBy('day')->mapWithKeys(function ($items, $key) {
             return [$key => $items];
         });
+        
+        foreach ($irregularOtherDatas as $irregularOtherData) {
+            foreach ($irregularOtherData as $data) {
+                $data->irregularFlag = TRUE;
+            }
+        }
 
         return $irregularOtherDatas;
     }

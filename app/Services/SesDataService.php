@@ -22,6 +22,7 @@ class SesDataService
             //アクセサで支払日を取得
             foreach ($sesDatas as $index => $sesData) {
                 $sesData->payment_day = $sesData->payment_day;
+                $sesData->irregularFlag = FALSE;
 
                 //まだ入金が開始されていないデータは除外
                 if (!in_array($sesData->status, [3, 5, 7])) {

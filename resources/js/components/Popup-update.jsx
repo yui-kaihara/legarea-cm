@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import Popup from './Popup';
 
 const PopupUpdate = () => {
-    const id = "popup-update";
+    const path = "/" + new URLSearchParams(window.location.search).get('day');
 
     return (
-        <Popup id={id} path="/1" />
+        <Popup id="popup-update" path={path} method=<input type="hidden" name="_method" value="PUT" /> />
     );
 };
 

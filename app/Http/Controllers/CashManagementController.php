@@ -163,13 +163,60 @@ class CashManagementController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 更新処理
+     * 
+     * @param CashManagementFormRequest $request
+     * @param int $id
+     * @return Illuminate\View\View
      */
-    public function update(Request $request, CashManagement $cashManagement)
+    public function update(CashManagementFormRequest $request, int $id)
     {
-        $year = $request->input('year') ?? now()->format('Y');
-        $month = $request->input('month') ?? now()->format('m');
-        $date = new DateTime($year.'-'.$month.'-'.$requests['date']);
+        $requests = $request->all();
+
+        //飲食店データ更新
+        $ShopRequests = [
+            'date' => $requests['date'],
+            'sales1' => $requests['sales1'],
+            'sales2' => $requests['sales2']
+        ];
+        $this->shopDataService->update($ShopRequests, $requests['shop_id']);
+        
+        //SESデータ更新
+        $sesRequests = [
+            'date' => $requests['date'],
+            'company_name' => $requests['company_name'],
+            'personnel_name' => $requests['personnel_name'],
+            'type' => $requests['ses_type'],
+            'amount' => $requests['ses_amount'],
+            'bank' => $requests['ses_bank']
+        ];
+        if ($requests['ses_irregular']) {
+            $this->irregularSesDataService->update($sesRequests, $requests['ses_id']);
+            
+        //定常データを変更する場合は、非定常SESテーブルに登録
+        } else {
+            $sesRequests['ses_data_id'] = $requests['ses_id'];
+            $this->irregularSesDataService->store($sesRequests);
+        }
+        
+        //その他データ更新
+        $otherRequests = [
+            'date' => $requests['date'],
+            'summary_id' => $requests['summary_id'],
+            'amount' => $requests['other_amount'],
+            'type' => $requests['other_type'],
+            'bank' => $requests['other_bank']
+        ];
+        if ($requests['other_irregular']) {
+            $this->irregularOtherDataService->update($otherRequests, $requests['other_id']);
+            
+        //定常データを変更する場合は、非定常その他テーブルに登録
+        } else {
+            $otherRequests['other_data_id'] = $requests['other_id'];
+            $this->irregularOtherDataService->store($otherRequests);    
+        }
+        
+        return redirect(route('cm.index'))->with('flash_message', '更新が完了しました。');
     }
 
     /**
