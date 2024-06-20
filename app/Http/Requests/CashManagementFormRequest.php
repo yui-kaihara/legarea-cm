@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\SummaryItem;
+use App\Rules\AllOrNone;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CashManagementFormRequest extends FormRequest
@@ -23,6 +24,8 @@ class CashManagementFormRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'date' => ['required'],
+            'company_name' => ['nullable', new AllOrNone(['company_name', 'personnel_name', 'ses_type', 'ses_amount', 'ses_bank'])]
             
         ];
     }
@@ -35,7 +38,7 @@ class CashManagementFormRequest extends FormRequest
     public function messages()
     {
         return [
-            
+            'required' => '必須です'
         ];
     }
 }

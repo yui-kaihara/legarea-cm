@@ -76,15 +76,42 @@ if ($otherDatas->has($dayParam)) {
         $otherData = trim(implode(',', $otherData), "'");
     }
 }
+
+$dayParams = explode(',', $dayParam);
+$dataParams = explode(',', $dataParam);
+$shopIds = [];
+$sesIds = [];
+$sesIrregularFlags = [];
+$otherIds = [];
+$otherIrregularFlags = [];
+for ($i = 0; $i < count($dayParams); $i++) {
+    if ($shopDatas->has($dayParams[$i])) {
+        $shopIds[$i] = $shopDatas[$dayParams[$i]]->id;
+    }
+    if ($sesDatas->has($dayParams[$i])) {
+        if ($sesDatas[$dayParams[$i]]->has($dataParams[$i])) {
+            $sesIds[$i] = $sesDatas[$dayParams[$i]][$dataParams[$i]]->id;
+            $sesIrregularFlags[$i] = $sesDatas[$dayParams[$i]][$dataParams[$i]]->irregularFlag;
+        }
+    }
+    if ($otherDatas->has($dayParams[$i])) {
+        if ($otherDatas[$dayParams[$i]]->has($dataParams[$i])) {
+            $otherIds[$i] = $otherDatas[$dayParams[$i]][$dataParams[$i]]->id;
+            $otherIrregularFlags[$i] = $otherDatas[$dayParams[$i]][$dataParams[$i]]->irregularFlag;
+        }
+    }
+}
+$shopId = trim(implode(',', $shopIds), "'");
+$sesId = trim(implode(',', $sesIds), "'");
+$sesIrregularFlag = trim(implode(',', $sesIrregularFlags), "'");
+$otherId = trim(implode(',', $otherIds), "'");
+$otherIrregularFlag = trim(implode(',', $otherIrregularFlags), "'");
 @endphp
 
             <div class="flex gap-1 mt-1">
                 <div id="popup-register" data-year-month="{{ $yearParam.'-'.$monthParam }}" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="登録" data-shop-data="{{ $shopData }}" data-ses-data="{{ $sesData }}" data-other-data="{{ $otherData }}"></div>
                 <div id="popup-update" data-year-month="{{ $yearParam.'-'.$monthParam }}" data-type="{{ $type }}" data-summary-item-name="{{ $summaryItemName }}" data-summary-item-id="{{ $summaryItemId }}" data-submit-text="編集" data-shop-data="{{ $shopData }}" data-ses-data="{{ $sesData }}" data-other-data="{{ $otherData }}"></div>
-                <a href="" class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">
-                    <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="4" y1="7" x2="20" y2="7" />  <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                    削除
-                </a>
+                <div id="popup-delete" data-year-month="{{ $yearParam.'-'.$monthParam }}" data-shop-id="{{ $shopId }}" data-ses-id="{{ $sesId }}" data-ses-irregular-flag="{{ $sesIrregularFlag }}" data-other-id="{{ $otherId }}" data-other-irregular-flag="{{ $otherIrregularFlag }}"></div>
                 <form action="{{ route('cm.download', ['year' => request()->input('year'), 'month' => request()->input('month')]) }}" method="POST">
                     @csrf
                     <button class="flex justify-center items-center gap-1 cursor-pointer py-2 px-4 text-sm font-semibold rounded border border-gray-400 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none no-underline">
@@ -137,7 +164,7 @@ if ($sesDataCount || $otherDataCount) {
 @for ($j = 0; $j < $maxCount; $j++)
 
                 <tr class="{{ $bgColor }}text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer is-check" /></td>
+                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer" /></td>
                     <td class="p-3 border">{{ $i }}</td>
 
 @if ($shopDatas->has($i) && ($j === 0))

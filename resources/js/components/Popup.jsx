@@ -23,7 +23,7 @@ const Popup = ({ id, path, method }) => {
                 month: yearMonth[1],
                 day: checkedValue[0],
                 data: checkedValue[1],
-                popup: 'true'
+                popup: 'update'
             }).toString();
             window.location.search = `?${params}`;
         }
@@ -59,7 +59,7 @@ const Popup = ({ id, path, method }) => {
     if (id == 'popup-update') {
         useEffect(() => {
             const params = new URLSearchParams(window.location.search);
-            if (params.get('popup') === 'true') {
+            if (params.get('popup') === 'update') {
                 togglePopup();
             }
         }, []);
@@ -115,7 +115,10 @@ const Popup = ({ id, path, method }) => {
     const submitText = document.getElementById(id).getAttribute('data-submit-text');
     
     //フォームの送信先
-    const url = window.location.origin + '/cm' + path;
+    const formUrl = window.location.origin + '/cm' + path;
+    
+    //キャンセルの遷移先
+    const cancelUrl = window.location.origin + '/cm';
     
     //csrfトークンを取得
     const csrfToken = document.querySelector("meta[name='csrf-token']");
@@ -124,10 +127,10 @@ const Popup = ({ id, path, method }) => {
     let icon = <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="4" y="4" width="16" height="16" rx="2" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>;
     
     //日付
-    let date = '';
+    let dateText = '';
     
     //日付選択フォーム
-    let dateForm = <div className="mb-10"><span className="text-sm font-semibold">日付</span><input type="date" name="select_date" value={stateSelectDate} onChange={(e) => setStateSelectDate(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /></div>;
+    let dateForm = <div className="mb-10"><span className="text-sm font-semibold">日付</span><input type="date" name="date" value={stateSelectDate} onChange={(e) => setStateSelectDate(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /></div>;
 
     //チェックされた日付を取得
     const yearMonth = document.getElementById(id).getAttribute('data-year-month');
@@ -146,10 +149,10 @@ const Popup = ({ id, path, method }) => {
         icon = <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>;
         
         if (day) {
-            date = <p className="mb-10 font-semibold">{yearMonth}-{day}</p>;
+            const date = yearMonth + '-' + day;
+            dateText = <p className="mb-10 font-semibold">{date}</p>;
+            dateForm = <input type="hidden" name="date" value={date} />;
         }
-
-        dateForm = '';
         
         if (shopData.length > 0) {
             [stateSales1, setStateSales1] = useState(shopData[1]);
@@ -180,14 +183,13 @@ const Popup = ({ id, path, method }) => {
             </button>
             {show && (
                 <div className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 mx-auto p-7 bg-white border rounded-lg shadow-md text-xs z-10">
-                    {date}
-                    <button class="absolute top-2.5 right-2.5" onClick={togglePopup}>
+                    {dateText}
+                    <a href={cancelUrl} class="absolute top-2.5 right-2.5">
                         <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
-                    </button>
-                    <form action={url} method="POST">
+                    </a>
+                    <form action={formUrl} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
                         {method}
-                        <input type="hidden" name="date" value={date} />
                         <input type="hidden" name="shop_id" value={shopData[0]} />
                         <input type="hidden" name="ses_id" value={sesData[0]} />
                         <input type="hidden" name="ses_irregular" value={sesData[6]} />
