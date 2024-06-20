@@ -127,7 +127,7 @@ const Popup = ({ id, path, method }) => {
     let date = '';
     
     //日付選択フォーム
-    let dateForm = <div className="mb-10"><span className="font-semibold">日付</span><input type="date" name="select_date" value={stateSelectDate} onChange={(e) => setStateSelectDate(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /></div>;
+    let dateForm = <div className="mb-10"><span className="text-sm font-semibold">日付</span><input type="date" name="select_date" value={stateSelectDate} onChange={(e) => setStateSelectDate(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /></div>;
 
     //チェックされた日付を取得
     const yearMonth = document.getElementById(id).getAttribute('data-year-month');
@@ -146,7 +146,7 @@ const Popup = ({ id, path, method }) => {
         icon = <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>;
         
         if (day) {
-            date = yearMonth + '-' + day;
+            date = <p className="mb-10 font-semibold">{yearMonth}-{day}</p>;
         }
 
         dateForm = '';
@@ -179,14 +179,12 @@ const Popup = ({ id, path, method }) => {
                 {submitText}
             </button>
             {show && (
-                <div className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs z-10">
-                    <div class="flex justify-between items-start">
-                        <p className="mb-5 font-semibold">{date}</p>
-                        <button onClick={togglePopup}>
-                            <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
-                        </button>
-                    </div>
-                    <form action={url} method="POST" class="mt-5">
+                <div className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 mx-auto p-7 bg-white border rounded-lg shadow-md text-xs z-10">
+                    {date}
+                    <button class="absolute top-2.5 right-2.5" onClick={togglePopup}>
+                        <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
+                    </button>
+                    <form action={url} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
                         {method}
                         <input type="hidden" name="date" value={date} />
