@@ -120,11 +120,11 @@ class SesData extends Model
      */
     public function getStatusAttribute()
     {
-        //現在
+        //現在（表示中）
         $year = request()->input('year') ?? now()->format('Y');
         $month = request()->input('month') ?? now()->format('m');
-        $day = request()->input('year') ? 31 : now()->format('d');
-        $now = new DateTime($year.'-'.$month.'-'.$day);
+        $day = new DateTime('last day of '.$year.'-'.$month);
+        $now = new DateTime($year.'-'.$month.'-'.$day->format('d'));
 
         //入場日
         $admissionDate = new DateTime($this->admission_date);
@@ -224,7 +224,7 @@ class SesData extends Model
         $sesData = $this->hasOne(IrregularSesData::class);
         $sesData->whereYear('date', Carbon::parse($yearMonth)->year);
         $sesData->whereMonth('date', Carbon::parse($yearMonth)->month);
-        
+
         return $sesData;
     }
 }
