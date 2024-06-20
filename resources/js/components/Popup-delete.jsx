@@ -78,7 +78,7 @@ const PopupDelete = () => {
             checkeEements.forEach(element => {
                 element.checked = false;
                 element.disabled = false;
-                element.parentElement.classList.remove('checked:bg-gray-200');
+                element.classList.remove('checked:bg-gray-200');
             });
         }
         
@@ -139,10 +139,10 @@ const PopupDelete = () => {
                         <input type="hidden" name="ses_irregular" value={sesIrregularFlags} />
                         <input type="hidden" name="other_id" value={otherIds} />
                         <input type="hidden" name="other_irregular" value={otherIrregularFlags} />
-                        <label class="flex gap-2 mb-10 cursor-pointer"><input type="checkbox" name="delete[]" value="1" onChange={allCheck} class="cursor-pointer is-allCheck" />すべて</label>
-                        <label class="flex gap-2 mb-10 cursor-pointer"><input type="checkbox" name="delete[]" value="2" class="cursor-pointer is-check" />飲食</label>
-                        <label class="flex gap-2 mb-10 cursor-pointer"><input type="checkbox" name="delete[]" value="3" class="cursor-pointer is-check" />SES</label>
-                        <label class="flex gap-2 cursor-pointer"><input type="checkbox" name="delete[]" value="4" class="cursor-pointer is-check" />その他</label>
+                        <label class="flex gap-2 w-1/4 mb-10 cursor-pointer"><input type="checkbox" name="delete[]" value="1" onChange={allCheck} class="cursor-pointer is-allCheck" />すべて</label>
+                        <label class="flex gap-2 w-1/4 mb-10 cursor-pointer"><input type="checkbox" name="delete[]" value="2" class="cursor-pointer checked:hover:bg-gray-200 is-check" />飲食</label>
+                        <label class="flex gap-2 w-1/4 mb-10 cursor-pointer"><input type="checkbox" name="delete[]" value="3" class="cursor-pointer checked:hover:bg-gray-200 is-check" />SES</label>
+                        <label class="flex gap-2 w-1/4 cursor-pointer"><input type="checkbox" name="delete[]" value="4" class="cursor-pointer checked:hover:bg-gray-200 is-check" />その他</label>
 
                         <div className="flex justify-center gap-1 mt-12">
                             <a href={cancelUrl} class="w-32 cursor-pointer py-3 px-4 font-semibold rounded-lg border border-transparent bg-gray-100 text-gray-800 text-center">キャンセル</a>

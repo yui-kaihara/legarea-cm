@@ -22,7 +22,10 @@ export default {
         'left-1/2',
         '-translate-x-1/2',
         'top-2.5',
-        'right-2.5'
+        'right-2.5',
+        'checked:bg-gray-200',
+        'checked:hover:bg-gray-200',
+        'w-1/4'
     ],
 
     theme: {
