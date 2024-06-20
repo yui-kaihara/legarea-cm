@@ -13,7 +13,15 @@ export default {
         'bg-green-200',
         'bg-orange-200',
         'bg-yellow-200',
-        'bg-red-200'
+        'bg-red-200',
+        'align-text-bottom',
+        'w-12',
+        'mt-5',
+        'mt-12',
+        'top-1/2',
+        '-translate-y-1/2',
+        'left-1/2',
+        '-translate-x-1/2'
     ],
 
     theme: {

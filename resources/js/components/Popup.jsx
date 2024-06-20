@@ -64,6 +64,27 @@ const Popup = ({ id, path, method }) => {
             }
         }, []);
     }
+    
+    //入力値クリア
+    const clearInputShop = () => {
+        setStateSales1("");
+        setStateSales2("");
+    }
+    
+    const clearInputSes = () => {
+        setStateCompanyName("");
+        setStatePersonnelName("");
+        setStateSesType("");
+        setStateSesAmount("");
+        setStateSesBank("");
+    }
+    
+    const clearInputOther = () => {
+        setStateSummaryId("");
+        setStateOtherAmount("");
+        setStateOtherType("");
+        setStateOtherBank("");
+    }
 
     //入力値
     let [stateSelectDate, setStateSelectDate] = useState("");
@@ -158,14 +179,14 @@ const Popup = ({ id, path, method }) => {
                 {submitText}
             </button>
             {show && (
-                <div className="absolute top-1/4 left-1/4 w-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs z-10">
+                <div className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 mx-auto p-7 bg-white rounded-lg shadow-md text-xs z-10">
                     <div class="flex justify-between items-start">
                         <p className="mb-5 font-semibold">{date}</p>
                         <button onClick={togglePopup}>
                             <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
                         </button>
                     </div>
-                    <form action={url} method="POST">
+                    <form action={url} method="POST" class="mt-5">
                         <input type="hidden" name="_token" value={csrfToken.content} />
                         {method}
                         <input type="hidden" name="date" value={date} />
@@ -176,7 +197,8 @@ const Popup = ({ id, path, method }) => {
                         <input type="hidden" name="other_irregular" value={otherData[5]} />
                         {dateForm}
                         <div className="mb-10">
-                            <span className="font-semibold">飲食</span>
+                            <span className="inline-block w-12 text-sm font-semibold">飲食</span>
+                            <a href="javascript:void(0);" class="align-text-bottom px-1 border border-gray-400" onClick={clearInputShop}>clear</a>
                             <div className="flex gap-3 mt-2">
                                 <label>
                                     ○○店
@@ -189,7 +211,8 @@ const Popup = ({ id, path, method }) => {
                             </div>
                         </div>
                         <div className="mb-10">
-                            <span className="font-semibold">SES</span>
+                            <span className="inline-block w-12 text-sm font-semibold">SES</span>
+                            <a href="javascript:void(0);" class="align-text-bottom px-1 border border-gray-400" onClick={clearInputSes}>clear</a>
                             <div className="flex gap-3 mt-2">
                                 <label>
                                     会社名
@@ -220,7 +243,8 @@ const Popup = ({ id, path, method }) => {
                             </div>
                         </div>
                         <div>
-                            <span className="font-semibold">その他</span>
+                            <span className="inline-block w-12 text-sm font-semibold">その他</span>
+                            <a href="javascript:void(0);" class="align-text-bottom px-1 border border-gray-400" onClick={clearInputOther}>clear</a>
                             <div className="flex gap-3 mt-2">
                                 <label>
                                     摘要
@@ -250,7 +274,7 @@ const Popup = ({ id, path, method }) => {
                                 </label>
                             </div>
                         </div>
-                        <div className="flex justify-center mt-20">
+                        <div className="flex justify-center mt-12">
                             <input type="submit" value={submitText} className="w-32 cursor-pointer py-3 px-4 font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none" />
                         </div>
                     </form>
