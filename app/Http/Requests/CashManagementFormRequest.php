@@ -24,9 +24,7 @@ class CashManagementFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['required'],
-            'company_name' => ['nullable', new AllOrNone(['company_name', 'personnel_name', 'ses_type', 'ses_amount', 'ses_bank'])]
-            
+
         ];
     }
     

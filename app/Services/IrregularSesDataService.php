@@ -73,16 +73,4 @@ class IrregularSesDataService
         $irregularSesData = IrregularSesData::find($id);
         $irregularSesData->fill($requests)->save();
     }
-    
-    /**
-     * 削除処理
-     * 
-     * @param int $id
-     * @return void
-     */
-    public function destroy(int $id)
-    {
-        $irregularSesData = IrregularSesData::find($id);
-        $irregularSesData->delete();
-    }
 }

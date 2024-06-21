@@ -73,16 +73,4 @@ class IrregularOtherDataService
         $irregularOtherData = IrregularOtherData::find($id);
         $irregularOtherData->fill($requests)->save();
     }
-    
-    /**
-     * 削除処理
-     * 
-     * @param int $id
-     * @return void
-     */
-    public function destroy(int $id)
-    {
-        $irregularOtherData = IrregularOtherData::find($id);
-        $irregularOtherData->delete();
-    }
 }

@@ -91,10 +91,10 @@ const PopupDelete = () => {
     let days = new URLSearchParams(window.location.search).get('day');
 
     //フォームの送信先
-    const formUrl = '';
+    let formUrl = '';
     if (days) {
         days = days.split(',');
-        const formUrl = window.location.origin + '/cm' + days[0];
+        formUrl = window.location.origin + '/cm/' + days[0];
     }
     
     //キャンセルの遷移先
@@ -123,7 +123,7 @@ const PopupDelete = () => {
             {show && (
                 <div className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-1/4 mx-auto p-7 bg-white border rounded-lg shadow-md text-xs z-10">
                     <div class="mb-10">
-                        {days.map((day, index) => (
+                        {[...new Set(days)].map((day, index) => (
                             <p className="mb-2 font-semibold">{yearMonth}-{day}</p>
     
                         ))}
@@ -134,6 +134,7 @@ const PopupDelete = () => {
                     <form action={formUrl} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
                         <input type="hidden" name="_method" value="DELETE" />
+                        <input type="hidden" name="date" value={days} />
                         <input type="hidden" name="shop_id" value={shopIds} />
                         <input type="hidden" name="ses_id" value={sesIds} />
                         <input type="hidden" name="ses_irregular" value={sesIrregularFlags} />

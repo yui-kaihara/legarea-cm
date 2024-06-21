@@ -103,7 +103,7 @@ class CashManagementController extends Controller
     public function store(CashManagementFormRequest $request)
     {
         $requests = $request->all();
-        $date = new DateTime($requests['select_date']);
+        $date = new DateTime($requests['date']);
 
         //飲食データ登録
         if ($requests['sales1'] || $requests['sales2']) {
@@ -225,11 +225,71 @@ class CashManagementController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 削除処理
+     * 
+     * @param Request $request
+     * @param int $id
+     * @return Illuminate\View\View
      */
-    public function destroy(CashManagement $cashManagement)
+    public function destroy(Request $request, int $id)
     {
-        //
+        $requests = $request->all();
+        $dates = explode(',', $requests['date']);
+        $dateCount = count($dates);
+        $shopIds = explode(',', $requests['shop_id']);
+        $sesIds = explode(',', $requests['ses_id']);
+        $otherIds = explode(',', $requests['other_id']);
+
+        if (isset($requests['delete'])) {
+
+            if (in_array('1', $requests['delete']) || in_array('2', $requests['delete'])) {
+                for ($i = 0; $i < $dateCount; $i++) {
+                    $this->shopDataService->destroy($shopIds[$i]);
+                }
+            }
+            
+            if (in_array('1', $requests['delete']) || in_array('3', $requests['delete'])) {
+                for ($i = 0; $i < $dateCount; $i++) {
+                    $sesRequests = [
+                        'date' => $dates[$i],
+                        'company_name' => null,
+                        'personnel_name' => null,
+                        'type' => null,
+                        'amount' => null,
+                        'bank' => null
+                    ];
+                    
+                    if ($requests['ses_irregular']) {
+                        $this->irregularSesDataService->update($sesRequests, $sesIds[$i]);
+                        
+                    } else {
+                        $sesRequests['ses_data_id'] = $sesIds[$i];
+                        $this->irregularSesDataService->store($sesRequests);
+                    }
+                }
+            }
+            
+            if (in_array('1', $requests['delete']) || in_array('4', $requests['delete'])) {
+                for ($i = 0; $i < $dateCount; $i++) {
+                    $otherRequests = [
+                        'date' => $dates[$i],
+                        'summary_id' => null,
+                        'amount' => null,
+                        'type' => null,
+                        'bank' => null
+                    ];
+                    
+                    if ($requests['other_irregular']) {
+                        $this->irregularSesDataService->update($otherRequests, $otherIds[$i]);
+                        
+                    } else {
+                        $otherRequests['other_data_id'] = $otherIds[$i];
+                        $this->irregularSesDataService->store($otherRequests);
+                    }
+                }
+            }
+        }
+        return redirect(route('cm.index'))->with('flash_message', '削除が完了しました。');
     }
     
     /**
