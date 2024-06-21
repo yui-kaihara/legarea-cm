@@ -50,7 +50,7 @@ if ($shopDatas->has($dayParam)) {
 $sesData = '';
 if ($sesDatas->has($dayParam)) {
     if ($sesDatas[$dayParam]->has($dataParam)) {
-        $sesData = $sesDatas[$dayParam][$dataParam]->irregularSesData ?? $dayParam[$i][$dataParam];
+        $sesData = $sesDatas[$dayParam][$dataParam]->irregularSesData ?? $sesDatas[$dayParam][$dataParam];
         $sesData = [
             $sesData->id,
             $sesData->company_name,
@@ -66,7 +66,7 @@ if ($sesDatas->has($dayParam)) {
 $otherData = '';
 if ($otherDatas->has($dayParam)) {
     if ($otherDatas[$dayParam]->has($dataParam)) {
-        $otherData = $otherDatas[$dayParam][$dataParam]->irregularOtherData ?? $dayParam[$i][$dataParam];
+        $otherData = $otherDatas[$dayParam][$dataParam]->irregularOtherData ?? $otherDatas[$dayParam][$dataParam];
         $otherData = [
             $otherData->id,
             $otherData->summary_id,
