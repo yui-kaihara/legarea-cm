@@ -143,7 +143,7 @@ class CashManagementController extends Controller
             $this->irregularOtherDataService->store($otherRequests);
         }
 
-        return redirect(route('cm.index'))->with('flash_message', '登録が完了しました。');
+        return redirect(route('cm.index'))->with('flash_message', '登録が完了しました');
     }
 
     /**
@@ -221,7 +221,7 @@ class CashManagementController extends Controller
             $this->irregularOtherDataService->update($otherRequests, $requests['other_id']);
         }
         
-        return redirect(route('cm.index'))->with('flash_message', '更新が完了しました。');
+        return redirect(route('cm.index'))->with('flash_message', '更新が完了しました');
     }
 
     /**
@@ -289,7 +289,7 @@ class CashManagementController extends Controller
                 }
             }
         }
-        return redirect(route('cm.index'))->with('flash_message', '削除が完了しました。');
+        return redirect(route('cm.index'))->with('flash_message', '削除が完了しました');
     }
     
     /**

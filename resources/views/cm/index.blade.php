@@ -50,14 +50,15 @@ if ($shopDatas->has($dayParam)) {
 $sesData = '';
 if ($sesDatas->has($dayParam)) {
     if ($sesDatas[$dayParam]->has($dataParam)) {
+        $sesData = $sesDatas[$dayParam][$dataParam]->irregularSesData ?? $dayParam[$i][$dataParam];
         $sesData = [
-            $sesDatas[$dayParam][$dataParam]->id,
-            $sesDatas[$dayParam][$dataParam]->company_name,
-            $sesDatas[$dayParam][$dataParam]->personnel_name,
-            $sesDatas[$dayParam][$dataParam]->type,
-            $sesDatas[$dayParam][$dataParam]->amount,
-            $sesDatas[$dayParam][$dataParam]->bank,
-            $sesDatas[$dayParam][$dataParam]->irregularFlag
+            $sesData->id,
+            $sesData->company_name,
+            $sesData->personnel_name,
+            $sesData->type,
+            $sesData->amount,
+            $sesData->bank,
+            $sesDatas[$dayParam][$dataParam]->irregularSesData ? 1 : 0
         ];
         $sesData = trim(implode(',', $sesData), "'");
     }
@@ -65,13 +66,14 @@ if ($sesDatas->has($dayParam)) {
 $otherData = '';
 if ($otherDatas->has($dayParam)) {
     if ($otherDatas[$dayParam]->has($dataParam)) {
+        $otherData = $otherDatas[$dayParam][$dataParam]->irregularOtherData ?? $dayParam[$i][$dataParam];
         $otherData = [
-            $otherDatas[$dayParam][$dataParam]->id,
-            $otherDatas[$dayParam][$dataParam]->summary_id,
-            $otherDatas[$dayParam][$dataParam]->amount,
-            $otherDatas[$dayParam][$dataParam]->type,
-            $otherDatas[$dayParam][$dataParam]->bank,
-            $otherDatas[$dayParam][$dataParam]->irregularFlag
+            $otherData->id,
+            $otherData->summary_id,
+            $otherData->amount,
+            $otherData->type,
+            $otherData->bank,
+            $otherDatas[$dayParam][$dataParam]->irregularOtherData ? 1 : 0
         ];
         $otherData = trim(implode(',', $otherData), "'");
     }
