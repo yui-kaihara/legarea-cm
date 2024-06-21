@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CashManagementFormRequest;
 use App\Models\SesData;
+use App\Services\BalanceDataService;
 use App\Services\FileOperateService;
 use App\Services\IrregularOtherDataService;
 use App\Services\IrregularSesDataService;
@@ -19,6 +20,7 @@ class CashManagementController extends Controller
     /**
      * コンストラクタ
      * 
+     * @param BalanceDataService $balanceDataService
      * @param FileOperateService $fileOperateService
      * @param IrregularOtherDataService $irregularOtherDataService
      * @param IrregularSesDataService $irregularSesDataService
@@ -28,6 +30,7 @@ class CashManagementController extends Controller
      * @param SummaryItemService $summaryItemService
      */
     public function __construct(
+        BalanceDataService $balanceDataService,
         FileOperateService $fileOperateService,
         IrregularOtherDataService $irregularOtherDataService,
         IrregularSesDataService $irregularSesDataService,
@@ -37,6 +40,7 @@ class CashManagementController extends Controller
         SummaryItemService $summaryItemService
     )
     {
+        $this->balanceDataService = $balanceDataService;
         $this->fileOperateService = $fileOperateService;
         $this->irregularOtherDataService = $irregularOtherDataService;
         $this->irregularSesDataService = $irregularSesDataService;
@@ -77,12 +81,18 @@ class CashManagementController extends Controller
         //月の最終日を取得
         $lastDay = new DateTime('last day of '.$yearMonth);
 
+        //前月の実残高を取得
+        $total = $this->balanceDataService->getDetail($year.'-'.sprintf('%02d', $month - 1));
+
+        $this->balanceDataService->update();
+
         return view('cm.index')->with([
             'summaryItems' => $summaryItems,
             'shopDatas' => $shopDatas,
             'sesDatas' => $sesDatas,
             'otherDatas' => $otherDatas,
-            'lastDay' => $lastDay->format('j')
+            'lastDay' => $lastDay->format('j'),
+            'total' => $total->amount ?? 0
         ]);
     }
 

@@ -165,11 +165,21 @@ if ($sesDataCount || $otherDataCount) {
 @endphp
 @for ($j = 0; $j < $maxCount; $j++)
 
+@php
+$shopAmount = 0;
+$sesAmount = 0;
+$otherAmount = 0;
+@endphp
+
                 <tr class="{{ $bgColor }}text-xs text-center">
                     <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer" /></td>
                     <td class="p-3 border">{{ $i }}</td>
 
 @if ($shopDatas->has($i) && ($j === 0))
+@php
+$shopAmount = $shopDatas[$i]->sales1 + $shopDatas[$i]->sales2;
+@endphp
+
                     <td class="p-3 border">{{ number_format($shopDatas[$i]->sales1) }}</td>
                     <td class="p-3 border">{{ number_format($shopDatas[$i]->sales2) }}</td>
 @else
@@ -180,7 +190,9 @@ if ($sesDataCount || $otherDataCount) {
 @if ($sesDatas->has($i) && ($sesDataCount > $j))
 @php
 $sesData = $sesDatas[$i][$j]->irregularSesData ?? $sesDatas[$i][$j];
+$sesAmount = (($sesData->type == 1) ? '+' : '-').$sesData->amount;
 @endphp
+
                     <td class="p-3 border">{{ $sesData->company_name }}</td>
                     <td class="p-3 border">{{ $sesData->personnel_name }}</td>
                     <td class="p-3 border">{{ config('forms.type')[$sesData->type] }}</td>
@@ -197,7 +209,9 @@ $sesData = $sesDatas[$i][$j]->irregularSesData ?? $sesDatas[$i][$j];
 @if ($otherDatas->has($i) && ($otherDataCount > $j))
 @php
 $otherData = $otherDatas[$i][$j]->irregularOtherData ?? $otherDatas[$i][$j];
+$otherAmount = (($otherData->type == 1) ? '+' : '-').$otherData->amount;
 @endphp
+
                     <td class="p-3 border">{{ $otherData->summaryItem[0]->name }}</td>
                     <td class="p-3 border">{{ number_format($otherData->amount) }}</td>
                     <td class="p-3 border">{{ config('forms.type')[$otherData->type] }}</td>
@@ -209,8 +223,13 @@ $otherData = $otherDatas[$i][$j]->irregularOtherData ?? $otherDatas[$i][$j];
                     <td class="p-3 border"></td>
 @endif
 
-                    <td class="p-3 border">{{ number_format(5000000) }}</td>
+@php
+$total = $total + $shopAmount + $sesAmount + $otherAmount;
+@endphp
+
+                    <td class="p-3 border">{{ number_format($total) }}</td>
                 </tr>
+
 @endfor
 @endfor
 
