@@ -16,7 +16,7 @@ $depositBank = old('deposit_bank');
 $withdrawalAmount = old('withdrawal_amount');
 $withdrawalPaymentSite = old('withdrawal_payment_site');
 $withdrawalIrregular = old('withdrawal_irregular');
-$withdrawalBank = old('withdrawal_payment_site');
+$withdrawalBank = old('withdrawal_bank');
 $depositId = '';
 @endphp
 

@@ -4,7 +4,7 @@ import Popup from './Popup';
 
 const PopupRegister = () => {
     return (
-        <Popup id="popup-register" path="" method="" />
+        <Popup id="popup-register" path="" />
     );
 };
 

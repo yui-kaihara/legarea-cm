@@ -29,9 +29,10 @@ class SesDataFormRequest extends FormRequest
             'deposit_payment_site' => ['required', 'in:1,2,3,4,5,6'],
             'deposit_irregular' => ['required', 'in:1,2'],
             'deposit_bank' => ['required'],
-            'deposit_payment_site' => ['nullable', 'required_with:withdrawal_amount', 'in:1,2,3,4,5,6'],
-            'withdrawal_irregular' => ['nullable', 'required_with:withdrawal_amount', 'in:1,2'],
-            'withdrawal_bank' => ['nullable', 'required_with:withdrawal_amount'],
+            'withdrawal_amount' => ['nullable', 'required_with:withdrawal_payment_site,withdrawal_irregular,withdrawal_bank'],
+            'withdrawal_payment_site' => ['nullable', 'required_with:withdrawal_amount,withdrawal_irregular,withdrawal_bank', 'in:1,2,3,4,5,6'],
+            'withdrawal_irregular' => ['nullable', 'required_with:withdrawal_amount,withdrawal_payment_site,withdrawal_bank', 'in:1,2'],
+            'withdrawal_bank' => ['nullable', 'required_with:withdrawal_amount,withdrawal_payment_site,withdrawal_irregular'],
             'admission_date' => ['required']
         ];
     }
@@ -45,7 +46,7 @@ class SesDataFormRequest extends FormRequest
     {
         return [
             'required' => '入力必須です',
-            'required_with' => '入力必須です',
+            'required_with' => '入力してください',
             'in' => 'リストから選択してください'
         ];
     }

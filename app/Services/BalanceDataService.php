@@ -27,7 +27,7 @@ class BalanceDataService
         IrregularSesDataService $irregularSesDataService,
         OtherDataService $otherDataService,
         SesDataService $sesDataService,
-        ShopDataService $shopDataService,
+        ShopDataService $shopDataService
     )
     {
         $this->irregularOtherDataService = $irregularOtherDataService;
@@ -65,22 +65,19 @@ class BalanceDataService
 
                 //飲食データを取得
                 $shopDatas = $this->shopDataService->getList($yearMonth);
+                
+                //飲食の金額を算出
+                $shopAmount = 0;
+                foreach ($shopDatas as $shopData) {
+                    $shopAmount = $shopAmount + $shopData->sales1 + $shopData->sales2;
+                }
         
                 //SESデータを取得
                 $sesDatas = $this->sesDataService->getList(TRUE);
                 $irregularSesDatas = $this->irregularSesDataService->getList($yearMonth);
                 $sesDatas = $sesDatas->union($irregularSesDatas);
                 
-                //その他データを取得
-                $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
-                $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth);
-                $otherDatas = $otherDatas->union($irregularOtherDatas);
-                
-                $shopAmount = 0;
-                foreach ($shopDatas as $shopData) {
-                    $shopAmount = $shopAmount + $shopData->sales1 + $shopData->sales2;
-                }
-                
+                //SESの金額を算出
                 $sesAmount = 0;
                 foreach ($sesDatas as $sesData) {
                     foreach ($sesData as $data) {
@@ -89,7 +86,13 @@ class BalanceDataService
                         $sesAmount = $sesAmount + $addAmount;
                     }
                 }
+    
+                //その他データを取得
+                $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
+                $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth);
+                $otherDatas = $otherDatas->union($irregularOtherDatas);
                 
+                //その他の金額を算出
                 $otherAmount = 0;
                 foreach ($otherDatas as $otherData) {
                     foreach ($otherData as $data) {
@@ -99,12 +102,19 @@ class BalanceDataService
                     }
                 }
                 
+                //先月
                 $lastMonth = ($j - 1) ?? '12';
-                $lastMonthYear = ($lastMonth == '12') ? $year - 1 : $year;
                 
+                //先月の年
+                $lastMonthYear = ($lastMonth == '12') ? ($year - 1) : $year;
+                
+                //先月の実残高を取得
                 $lastMonthTotal = $this->getDetail($lastMonthYear.'-'.sprintf('%02d', $lastMonth))->amount ?? 0;
+                
+                //先月の実残高に今月の金額を合算
                 $total = $lastMonthTotal + $shopAmount + $sesAmount + $otherAmount;
 
+                //更新または登録
                 BalanceData::updateOrCreate(['month' => $yearMonth], ['month' => $yearMonth, 'amount' => $total]);
             }
         }

@@ -6,7 +6,7 @@ const PopupUpdate = () => {
     const path = "/" + new URLSearchParams(window.location.search).get('day');
 
     return (
-        <Popup id="popup-update" path={path} method=<input type="hidden" name="_method" value="PUT" /> />
+        <Popup id="popup-update" path={path} />
     );
 };
 

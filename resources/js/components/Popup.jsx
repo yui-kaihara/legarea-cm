@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const Popup = ({ id, path, method }) => {
+const Popup = ({ id, path }) => {
     const [show, setShow] = useState(false);
 
     //ポップアップ開閉
@@ -67,38 +68,73 @@ const Popup = ({ id, path, method }) => {
     
     //入力値クリア
     const clearInputShop = () => {
-        setStateSales1("");
-        setStateSales2("");
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            sales1: '',
+            sales2: ''
+        }));
     }
     
     const clearInputSes = () => {
-        setStateCompanyName("");
-        setStatePersonnelName("");
-        setStateSesType("");
-        setStateSesAmount("");
-        setStateSesBank("");
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            company_name: '',
+            personnel_name: '',
+            ses_type: '',
+            ses_amount: '',
+            ses_bank: ''
+        }));
     }
     
     const clearInputOther = () => {
-        setStateSummaryId("");
-        setStateOtherAmount("");
-        setStateOtherType("");
-        setStateOtherBank("");
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            summary_id: '',
+            other_amount: '',
+            other_type: '',
+            other_bank: ''
+        }));
     }
+    
+    const [errors, setErrors] = useState({});
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (id == 'popup-update') {
+                const response = await axios.put(formUrl, formData);
+            } else {
+                const response = await axios.post(formUrl, formData);
+            }
+            
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            }
+        }
+    };
 
-    //入力値
-    let [stateSelectDate, setStateSelectDate] = useState("");
-    let [stateSales1, setStateSales1] = useState("");
-    let [stateSales2, setStateSales2] = useState("");
-    let [stateCompanyName, setStateCompanyName] = useState("");
-    let [statePersonnelName, setStatePersonnelName] = useState("");
-    let [stateSesType, setStateSesType] = useState("");
-    let [stateSesAmount, setStateSesAmount] = useState("");
-    let [stateSesBank, setStateSesBank] = useState("");
-    let [stateSummaryId, setStateSummaryId] = useState("");
-    let [stateOtherAmount, setStateOtherAmount] = useState("");
-    let [stateOtherType, setStateOtherType] = useState("");
-    let [stateOtherBank, setStateOtherBank] = useState("");
+    const initialFormData = {
+        date: '',
+        sales1: '',
+        sales2: '',
+        company_name: '',
+        personnel_name: '',
+        ses_type: '',
+        ses_amount: '',
+        ses_bank: '',
+        summary_id: '',
+        other_amount: '',
+        other_type: '',
+        other_bank: ''
+    };
+     
+    let [formData, setFormData] = useState(initialFormData);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
     //入金種別の配列を用意
     const types = document.getElementById(id).getAttribute('data-type').split(",");
@@ -130,20 +166,20 @@ const Popup = ({ id, path, method }) => {
     let dateText = '';
     
     //日付選択フォーム
-    let dateForm = <div className="mb-10"><span className="text-sm font-semibold">日付</span><input type="date" name="date" value={stateSelectDate} onChange={(e) => setStateSelectDate(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /></div>;
+    let dateForm = <div className="mb-10"><span className="text-sm font-semibold">日付</span><input type="date" name="date" value={formData.select_date} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /><p class="mt-1 text-red-500">{errors.date}</p></div>;
 
     //チェックされた日付を取得
     const yearMonth = document.getElementById(id).getAttribute('data-year-month');
     const day = new URLSearchParams(window.location.search).get('day');
     
     //飲食店データ取得
-    const shopData = document.getElementById(id).getAttribute('data-shop-data').split(',');
+    let shopData = document.getElementById(id).getAttribute('data-shop-data').split(',');
     
     //SESデータ取得
-    const sesData = document.getElementById(id).getAttribute('data-ses-data').split(',');
+    let sesData = document.getElementById(id).getAttribute('data-ses-data').split(',');
     
     //その他データ取得
-    const otherData = document.getElementById(id).getAttribute('data-other-data').split(',');
+    let otherData = document.getElementById(id).getAttribute('data-other-data').split(',');
 
     if (id == 'popup-update') {
         icon = <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>;
@@ -154,25 +190,19 @@ const Popup = ({ id, path, method }) => {
             dateForm = <input type="hidden" name="date" value={date} />;
         }
         
-        if (shopData.length > 0) {
-            [stateSales1, setStateSales1] = useState(shopData[1]);
-            [stateSales2, setStateSales2] = useState(shopData[2]);
-        }
-
-        if (sesData.length > 0) {
-            [stateCompanyName, setStateCompanyName] = useState(sesData[1]);
-            [statePersonnelName, setStatePersonnelName] = useState(sesData[2]);
-            [stateSesType, setStateSesType] = useState(sesData[3]);
-            [stateSesAmount, setStateSesAmount] = useState(sesData[4]);
-            [stateSesBank, setStateSesBank] = useState(sesData[5]);
-        }
-
-        if (otherData.length > 0) {
-            [stateSummaryId, setStateSummaryId] = useState(otherData[1]);
-            [stateOtherAmount, setStateOtherAmount] = useState(otherData[2]);
-            [stateOtherType, setStateOtherType] = useState(otherData[3]);
-            [stateOtherBank, setStateOtherBank] = useState(otherData[4]);
-        }
+        [formData, setFormData] = useState({
+            sales1: (shopData.length > 0) ? shopData[1] : '',
+            sales2: (shopData.length > 0) ? shopData[2] : '',
+            company_name: (sesData.length > 0) ? sesData[1] : '',
+            personnel_name: (sesData.length > 0) ? sesData[2] : '',
+            ses_type: (sesData.length > 0) ? sesData[3] : '',
+            ses_amount: (sesData.length > 0) ? sesData[4] : '',
+            ses_bank: (sesData.length > 0) ? sesData[5] : '',
+            summary_id: (otherData.length > 0) ? otherData[1] : '',
+            other_amount: (otherData.length > 0) ? otherData[2] : '',
+            other_type: (otherData.length > 0) ? otherData[3] : '',
+            other_bank: (otherData.length > 0) ? otherData[4] : '',
+        });
     }
 
     return (
@@ -187,9 +217,8 @@ const Popup = ({ id, path, method }) => {
                     <a href={cancelUrl} class="absolute top-2.5 right-2.5">
                         <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
                     </a>
-                    <form action={formUrl} method="POST">
+                    <form onSubmit={handleSubmit}>
                         <input type="hidden" name="_token" value={csrfToken.content} />
-                        {method}
                         <input type="hidden" name="shop_id" value={shopData[0]} />
                         <input type="hidden" name="ses_id" value={sesData[0]} />
                         <input type="hidden" name="ses_irregular" value={sesData[6]} />
@@ -202,11 +231,11 @@ const Popup = ({ id, path, method }) => {
                             <div className="flex gap-3 mt-2">
                                 <label>
                                     ○○店
-                                    <input type="number" name="sales1" value={stateSales1} onChange={(e) => setStateSales1(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="number" name="sales1" value={formData.sales1} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
                                 </label>
                                 <label>
                                     ○○店
-                                    <input type="number" name="sales2" value={stateSales2} onChange={(e) => setStateSales2(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="number" name="sales2" value={formData.sales2} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
                                 </label>
                             </div>
                         </div>
@@ -216,29 +245,34 @@ const Popup = ({ id, path, method }) => {
                             <div className="flex gap-3 mt-2">
                                 <label>
                                     会社名
-                                    <input type="text" name="company_name" value={stateCompanyName} onChange={(e) => setStateCompanyName(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="text" name="company_name" value={formData.company_name} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    {errors.company_name && <p class="mt-1 text-red-500">{errors.company_name}</p>}
                                 </label>
                                 <label>
                                     要員名
-                                    <input type="text" name="personnel_name" value={statePersonnelName} onChange={(e) => setStatePersonnelName(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="text" name="personnel_name" value={formData.personnel_name} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    {errors.personnel_name && <p class="mt-1 text-red-500">{errors.personnel_name}</p>}
                                 </label>
                                 <label>
                                     入金種別
-                                    <select name="ses_type" className="block w-20 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
+                                    <select name="ses_type" className="block w-24 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
                                         <option value=""></option>
                                         {types.map((type, index) => (
-                                            <option value={index+1} selected={stateSesType == index+1 ? 'selected' : ''}>{type}</option>
+                                            <option value={index+1} selected={formData.ses_type == index+1 ? 'selected' : ''}>{type}</option>
 
                                         ))}
                                     </select>
+                                    {errors.ses_type && <p class="mt-1 text-red-500">{errors.ses_type}</p>}
                                 </label>
                                 <label>
                                     金額
-                                    <input type="number" name="ses_amount" value={stateSesAmount} onChange={(e) => setStateSesAmount(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="number" name="ses_amount" value={formData.ses_amount} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    {errors.ses_amount && <p class="mt-1 text-red-500">{errors.ses_amount}</p>}
                                 </label>
                                 <label>
                                     入出金銀行
-                                    <input type="text" name="ses_bank" value={stateSesBank} onChange={(e) => setStateSesBank(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="text" name="ses_bank" value={formData.ses_bank} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    {errors.ses_bank && <p class="mt-1 text-red-500">{errors.ses_bank}</p>}
                                 </label>
                             </div>
                         </div>
@@ -251,26 +285,30 @@ const Popup = ({ id, path, method }) => {
                                     <select name="summary_id" className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
                                         <option value=""></option>
                                         {summaryItems.map((summaryItem, index) => (
-                                            <option value={index} selected={stateSummaryId == index ? 'selected' : ''}>{summaryItem}</option>
+                                            <option value={index} selected={formData.summary_id == index ? 'selected' : ''}>{summaryItem}</option>
                                         ))}
                                     </select>
+                                    {errors.summary_id && <p class="mt-1 text-red-500">{errors.summary_id}</p>}
                                 </label>
                                 <label>
                                     金額
-                                    <input type="number" name="other_amount" value={stateOtherAmount} onChange={(e) => setStateOtherAmount(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="number" name="other_amount" value={formData.other_amount} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    {errors.other_amount && <p class="mt-1 text-red-500">{errors.other_amount}</p>}
                                 </label>
                                 <label>
                                     入金種別
-                                    <select name="other_type" className="block w-20 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
+                                    <select name="other_type" className="block w-24 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
                                         <option value=""></option>
                                         {types.map((type, index) => (
-                                            <option value={index+1} selected={stateOtherType == index+1 ? 'selected' : ''}>{type}</option>
+                                            <option value={index+1} selected={formData.other_type == index+1 ? 'selected' : ''}>{type}</option>
                                         ))}
                                     </select>
+                                    {errors.other_type && <p class="mt-1 text-red-500">{errors.other_type}</p>}
                                 </label>
                                 <label>
                                     入出金銀行
-                                    <input type="text" name="other_bank" value={stateOtherBank} onChange={(e) => setStateOtherBank(e.target.value)} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="text" name="other_bank" value={formData.other_bank} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    {errors.other_bank && <p class="mt-1 text-red-500">{errors.other_bank}</p>}
                                 </label>
                             </div>
                         </div>
