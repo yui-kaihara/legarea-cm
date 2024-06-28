@@ -69,7 +69,7 @@ class CashManagementController extends Controller
         $shopDatas = $this->shopDataService->getList($yearMonth);
 
         //SESデータを取得
-        $sesDatas = $this->sesDataService->getList(TRUE);
+        $sesDatas = $this->sesDataService->getList(TRUE, $yearMonth);
         $irregularSesDatas = $this->irregularSesDataService->getList($yearMonth); //非定常SESデータを取得
         $sesDatas = $sesDatas->union($irregularSesDatas); //SESデータを結合
         
@@ -82,7 +82,9 @@ class CashManagementController extends Controller
         $lastDay = new DateTime('last day of '.$yearMonth);
 
         //前月の実残高を取得
-        $total = $this->balanceDataService->getDetail($year.'-'.sprintf('%02d', $month - 1));
+        $lastMonth = (($month - 1) !== 0) ? ($month - 1) : 12;
+        $lastMonthYear = ($lastMonth === 12) ? ($year - 1) : $year;
+        $total = $this->balanceDataService->getDetail($lastMonthYear.'-'.sprintf('%02d', $lastMonth));
 
         $this->balanceDataService->update();
 
@@ -186,10 +188,10 @@ class CashManagementController extends Controller
         //飲食店データ更新
         $shopRequests = [
             'date' => $requests['date'],
-            'sales1' => $requests['sales1'],
-            'sales2' => $requests['sales2']
+            'sales1' => isset($requests['sales1']) ? $requests['sales1'] : null,
+            'sales2' => isset($requests['sales2']) ? $requests['sales2'] : null
         ];
-        if ($requests['shop_id']) {
+        if (isset($requests['shop_id'])) {
             $this->shopDataService->update($shopRequests, $requests['shop_id']);
         } elseif ($shopRequests['sales1'] || $shopRequests['sales2']) {
             $this->shopDataService->store($shopRequests);
@@ -199,17 +201,17 @@ class CashManagementController extends Controller
         //SESデータ更新
         $sesRequests = [
             'date' => $requests['date'],
-            'company_name' => $requests['company_name'],
-            'personnel_name' => $requests['personnel_name'],
-            'type' => $requests['ses_type'],
-            'amount' => $requests['ses_amount'],
-            'bank' => $requests['ses_bank']
+            'company_name' => isset($requests['company_name']) ? $requests['company_name'] : null,
+            'personnel_name' => isset($requests['personnel_name']) ? $requests['personnel_name'] : null,
+            'type' => isset($requests['ses_type']) ? $requests['ses_type'] : null,
+            'amount' => isset($requests['ses_amount']) ? $requests['ses_amount'] : null,
+            'bank' => isset($requests['ses_bank']) ? $requests['ses_bank'] : null
         ];
-        if (!$requests['ses_irregular'] && $requests['company_name']) {
+        if (!isset($requests['ses_irregular']) && isset($requests['company_name'])) {
             $sesRequests['ses_data_id'] = $requests['ses_id'];
             $this->irregularSesDataService->store($sesRequests);
             
-        } elseif ($requests['ses_id']) {
+        } elseif (isset($requests['ses_id'])) {
             
             $this->irregularSesDataService->update($sesRequests, $requests['ses_id']);
         }
@@ -217,20 +219,20 @@ class CashManagementController extends Controller
         //その他データ更新
         $otherRequests = [
             'date' => $requests['date'],
-            'summary_id' => $requests['summary_id'],
-            'amount' => $requests['other_amount'],
-            'type' => $requests['other_type'],
-            'bank' => $requests['other_bank']
+            'summary_id' => isset($requests['summary_id']) ? $requests['summary_id'] : null,
+            'amount' => isset($requests['other_amount']) ? $requests['other_amount'] : null,
+            'type' => isset($requests['other_type']) ? $requests['other_type'] : null,
+            'bank' => isset($requests['other_bank']) ? $requests['other_bank'] : null
         ];
-        if (!$requests['other_irregular'] && $requests['summary_id']) {
+        if (!isset($requests['other_irregular']) && isset($requests['summary_id'])) {
             $otherRequests['other_data_id'] = $requests['other_id'];
             $this->irregularOtherDataService->store($otherRequests);
             
-        } elseif ($requests['other_id']) {
+        } elseif (isset($requests['other_id'])) {
             
             $this->irregularOtherDataService->update($otherRequests, $requests['other_id']);
         }
-        
+
         return redirect(route('cm.index'))->with('flash_message', '更新が完了しました');
     }
 

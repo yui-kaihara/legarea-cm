@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Popup = ({ id, path }) => {
-    const [show, setShow] = useState(false);
 
     //ポップアップ開閉
+    const [show, setShow] = useState(false);
     const togglePopup = () => {
         setShow(!show);
     };
@@ -95,25 +95,28 @@ const Popup = ({ id, path }) => {
             other_bank: ''
         }));
     }
-    
+
+    //バリデーションエラー
     const [errors, setErrors] = useState({});
     
+    //送信処理実行
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (id == 'popup-update') {
-                const response = await axios.put(formUrl, formData);
-            } else {
-                const response = await axios.post(formUrl, formData);
-            }
-            
+            await axios.post(formUrl, formData);
+            window.location.href = '/cm';
+
         } catch (error) {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
         }
     };
+    
+    //csrfトークンを取得
+    let csrfToken = document.querySelector("meta[name='csrf-token']").content;
 
+    //入力データ
     const initialFormData = {
         date: '',
         sales1: '',
@@ -126,7 +129,8 @@ const Popup = ({ id, path }) => {
         summary_id: '',
         other_amount: '',
         other_type: '',
-        other_bank: ''
+        other_bank: '',
+        _token: csrfToken
     };
      
     let [formData, setFormData] = useState(initialFormData);
@@ -156,9 +160,6 @@ const Popup = ({ id, path }) => {
     //キャンセルの遷移先
     const cancelUrl = window.location.origin + '/cm';
     
-    //csrfトークンを取得
-    const csrfToken = document.querySelector("meta[name='csrf-token']");
-    
     //ボタンのアイコンを設定
     let icon = <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="4" y="4" width="16" height="16" rx="2" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>;
     
@@ -181,28 +182,37 @@ const Popup = ({ id, path }) => {
     //その他データ取得
     let otherData = document.getElementById(id).getAttribute('data-other-data').split(',');
 
+    //更新の場合
     if (id == 'popup-update') {
         icon = <svg class="h-5 w-5"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>;
         
         if (day) {
             const date = yearMonth + '-' + day;
             dateText = <p className="mb-10 font-semibold">{date}</p>;
-            dateForm = <input type="hidden" name="date" value={date} />;
+            dateForm = '';
+            
+            [formData, setFormData] = useState({
+                date: date,
+                shop_id: (shopData.length > 0) ? shopData[0] : '',
+                sales1: (shopData.length > 0) ? shopData[1] : '',
+                sales2: (shopData.length > 0) ? shopData[2] : '',
+                ses_id: (sesData.length > 0) ? sesData[0] : '',
+                company_name: (sesData.length > 0) ? sesData[1] : '',
+                personnel_name: (sesData.length > 0) ? sesData[2] : '',
+                ses_type: (sesData.length > 0) ? sesData[3] : '',
+                ses_amount: (sesData.length > 0) ? sesData[4] : '',
+                ses_bank: (sesData.length > 0) ? sesData[5] : '',
+                ses_irregular: (sesData.length > 0) ? sesData[6] : '',
+                other_id: (otherData.length > 0) ? otherData[0] : '',
+                summary_id: (otherData.length > 0) ? otherData[1] : '',
+                other_amount: (otherData.length > 0) ? otherData[2] : '',
+                other_type: (otherData.length > 0) ? otherData[3] : '',
+                other_bank: (otherData.length > 0) ? otherData[4] : '',
+                other_irregular: (otherData.length > 0) ? otherData[5] : '',
+                _token: csrfToken,
+                _method: 'PUT'
+            });
         }
-        
-        [formData, setFormData] = useState({
-            sales1: (shopData.length > 0) ? shopData[1] : '',
-            sales2: (shopData.length > 0) ? shopData[2] : '',
-            company_name: (sesData.length > 0) ? sesData[1] : '',
-            personnel_name: (sesData.length > 0) ? sesData[2] : '',
-            ses_type: (sesData.length > 0) ? sesData[3] : '',
-            ses_amount: (sesData.length > 0) ? sesData[4] : '',
-            ses_bank: (sesData.length > 0) ? sesData[5] : '',
-            summary_id: (otherData.length > 0) ? otherData[1] : '',
-            other_amount: (otherData.length > 0) ? otherData[2] : '',
-            other_type: (otherData.length > 0) ? otherData[3] : '',
-            other_bank: (otherData.length > 0) ? otherData[4] : '',
-        });
     }
 
     return (
@@ -218,12 +228,6 @@ const Popup = ({ id, path }) => {
                         <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="18" y1="6" x2="6" y2="18" />  <line x1="6" y1="6" x2="18" y2="18" /></svg>
                     </a>
                     <form onSubmit={handleSubmit}>
-                        <input type="hidden" name="_token" value={csrfToken.content} />
-                        <input type="hidden" name="shop_id" value={shopData[0]} />
-                        <input type="hidden" name="ses_id" value={sesData[0]} />
-                        <input type="hidden" name="ses_irregular" value={sesData[6]} />
-                        <input type="hidden" name="other_id" value={otherData[0]} />
-                        <input type="hidden" name="other_irregular" value={otherData[5]} />
                         {dateForm}
                         <div className="mb-10">
                             <span className="inline-block w-12 text-sm font-semibold">飲食</span>
@@ -255,10 +259,10 @@ const Popup = ({ id, path }) => {
                                 </label>
                                 <label>
                                     入金種別
-                                    <select name="ses_type" className="block w-24 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
+                                    <select name="ses_type" value={formData.ses_type} onChange={handleInputChange} className="block w-24 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
                                         <option value=""></option>
                                         {types.map((type, index) => (
-                                            <option value={index+1} selected={formData.ses_type == index+1 ? 'selected' : ''}>{type}</option>
+                                            <option value={index+1}>{type}</option>
 
                                         ))}
                                     </select>
@@ -282,10 +286,10 @@ const Popup = ({ id, path }) => {
                             <div className="flex gap-3 mt-2">
                                 <label>
                                     摘要
-                                    <select name="summary_id" className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
+                                    <select name="summary_id" value={formData.summary_id} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
                                         <option value=""></option>
                                         {summaryItems.map((summaryItem, index) => (
-                                            <option value={index} selected={formData.summary_id == index ? 'selected' : ''}>{summaryItem}</option>
+                                            <option value={index}>{summaryItem}</option>
                                         ))}
                                     </select>
                                     {errors.summary_id && <p class="mt-1 text-red-500">{errors.summary_id}</p>}
@@ -297,10 +301,10 @@ const Popup = ({ id, path }) => {
                                 </label>
                                 <label>
                                     入金種別
-                                    <select name="other_type" className="block w-24 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
+                                    <select name="other_type" value={formData.other_type} onChange={handleInputChange} className="block w-24 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer">
                                         <option value=""></option>
                                         {types.map((type, index) => (
-                                            <option value={index+1} selected={formData.other_type == index+1 ? 'selected' : ''}>{type}</option>
+                                            <option value={index+1}>{type}</option>
                                         ))}
                                     </select>
                                     {errors.other_type && <p class="mt-1 text-red-500">{errors.other_type}</p>}

@@ -73,7 +73,7 @@ class BalanceDataService
                 }
         
                 //SESデータを取得
-                $sesDatas = $this->sesDataService->getList(TRUE);
+                $sesDatas = $this->sesDataService->getList(TRUE, $yearMonth);
                 $irregularSesDatas = $this->irregularSesDataService->getList($yearMonth);
                 $sesDatas = $sesDatas->union($irregularSesDatas);
                 
@@ -103,14 +103,14 @@ class BalanceDataService
                 }
                 
                 //先月
-                $lastMonth = ($j - 1) ?? '12';
+                $lastMonth = (($j - 1) !== 0) ? ($j - 1) : 12;
                 
                 //先月の年
-                $lastMonthYear = ($lastMonth == '12') ? ($year - 1) : $year;
-                
+                $lastMonthYear = ($lastMonth === 12) ? ($i - 1) : $i;
+
                 //先月の実残高を取得
                 $lastMonthTotal = $this->getDetail($lastMonthYear.'-'.sprintf('%02d', $lastMonth))->amount ?? 0;
-                
+
                 //先月の実残高に今月の金額を合算
                 $total = $lastMonthTotal + $shopAmount + $sesAmount + $otherAmount;
 

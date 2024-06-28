@@ -118,13 +118,10 @@ class SesData extends Model
      * 
      * @return int
      */
-    public function getStatusAttribute()
+    public function getStatus(string $yearMonth)
     {
-        //現在（表示中）
-        $year = request()->input('year') ?? now()->format('Y');
-        $month = request()->input('month') ?? now()->format('m');
-        $day = new DateTime('last day of '.$year.'-'.$month);
-        $now = new DateTime($year.'-'.$month.'-'.$day->format('d'));
+        $day = new DateTime('last day of '.$yearMonth);
+        $now = new DateTime($yearMonth.'-'.$day->format('d'));
 
         //入場日
         $admissionDate = new DateTime($this->admission_date);

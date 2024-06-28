@@ -34,7 +34,7 @@ $status = config('status');
                     <td class="w-32 py-3 px-1">{{ $sesData->company_name }}</td>
                     <td class="w-56 py-3 px-1">{{ $sesData->case_name }}</td>
                     <td class="w-32 py-3 px-1">{{ $sesData->personnel_name }}</td>
-                    <td class="w-32 py-3 px-1"><span class="inline-block w-16 px-2 py-1 bg-{{ $status[$sesData->status]['color'] }}-200 rounded">{{ $status[$sesData->status]['text'] }}</span></td>
+                    <td class="w-32 py-3 px-1"><span class="inline-block w-16 px-2 py-1 bg-{{ $status[$sesData->getStatus(now()->format('Y-m'))]['color'] }}-200 rounded">{{ $status[$sesData->getStatus(now()->format('Y-m'))]['text'] }}</span></td>
                     <td class="w-40 py-3 px-1">
                         <div class="flex items-center gap-0.5 text-xs">
                             <a href="{{ route('ses.show', [$sesData]) }}" class="bg-white hover:bg-gray-100 text-gray-500 font-semibold py-2 px-2 border border-gray-400 rounded shadow no-underline">

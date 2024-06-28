@@ -13,7 +13,7 @@ class SesDataService
      * @param bool $groupByFlag
      * @return Collection
      */
-    public function getList(bool $groupByFlag = FALSE)
+    public function getList(bool $groupByFlag = FALSE, string $yearMonth = NULL)
     {
         $sesDatas = SesData::get();
         
@@ -25,7 +25,7 @@ class SesDataService
                 $sesData->irregularFlag = FALSE;
 
                 //まだ入金が開始されていないデータは除外
-                if (!in_array($sesData->status, [3, 5, 7])) {
+                if (!in_array($sesData->getStatus($yearMonth), [3, 5, 7])) {
                     $sesDatas->forget($index);
                 }
             }
