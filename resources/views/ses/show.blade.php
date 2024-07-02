@@ -61,15 +61,15 @@ $forms = config('forms');
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">支払いサイト</th>
-                <td class="p-3 border">{{ $withdrawalData->withdrawal_payment_site ? $forms['paymentSite'][$withdrawalData->withdrawal_payment_site].'日' : ''; }}</td>
+                <td class="p-3 border">{{ $withdrawalData ? $forms['paymentSite'][$withdrawalData->withdrawal_payment_site].'日' : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">土日祝の場合</th>
-                <td class="p-3 border">{{ $withdrawalData->withdrawal_irregular ? $forms['irregular'][$withdrawalData->withdrawal_irregular] : '' }}</td>
+                <td class="p-3 border">{{ $withdrawalData ? $forms['irregular'][$withdrawalData->withdrawal_irregular] : ''; }}</td>
             </tr>
             <tr class="text-xs font-medium text-gray-600 text-center">
                 <th class="p-3 border">銀行</th>
-                <td class="p-3 border">{{ $withdrawalData->withdrawal_bank }}</td>
+                <td class="p-3 border">{{ $withdrawalData ? $withdrawalData->withdrawal_bank : ''; }}</td>
             </tr>
         </table>
     </div>

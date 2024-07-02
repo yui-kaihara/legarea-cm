@@ -320,7 +320,7 @@ class CashManagementController extends Controller
         $shopDatas = $this->shopDataService->getList($yearMonth);
 
         //SESデータを取得
-        $sesDatas = $this->sesDataService->getList(TRUE);
+        $sesDatas = $this->sesDataService->getList(TRUE, $yearMonth);
         $irregularSesDatas = $this->irregularSesDataService->getList($yearMonth); //非定常SESデータを取得
         $sesDatas = $sesDatas->union($irregularSesDatas); //SESデータを結合
         
