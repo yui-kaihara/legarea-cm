@@ -2,7 +2,7 @@
     <x-slot name="header">摘要項目一覧</x-slot>
     
 @if (session('flash_message'))
-    <p class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
+    <p id="flash-message" class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
         {{ session('flash_message') }}
     </p>
 @endif
@@ -44,4 +44,20 @@
             </tbody>
         </table>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var flashMessage = document.getElementById('flash-message');
+                if (flashMessage) {
+                    flashMessage.style.transition = 'opacity 0.5s ease-in-out';
+                    flashMessage.style.opacity = '0';
+                    setTimeout(function() {
+                        flashMessage.remove();
+                    }, 500); // フェードアウトの時間に合わせて500ミリ秒待つ
+                }
+            }, 3000); // 3秒後にメッセージをフェードアウト
+        });
+    </script>
+    
 </x-app-layout>

@@ -34,11 +34,11 @@ $depositId = '';
         $depositPaymentSite = $sesData->deposit_payment_site;
         $depositIrregular = $sesData->deposit_irregular;
         $depositBank = $sesData->deposit_bank;
-        $withdrawalAmount = $withdrawalData->withdrawal_amount;
-        $withdrawalPaymentSite = $withdrawalData->withdrawal_payment_site;
-        $withdrawalIrregular = $withdrawalData->withdrawal_irregular;
-        $withdrawalBank = $withdrawalData->withdrawal_bank;
-        $depositId = $withdrawalData->deposit_id;
+        $withdrawalAmount = $withdrawalData->withdrawal_amount ?? '';
+        $withdrawalPaymentSite = $withdrawalData->withdrawal_payment_site ?? '';
+        $withdrawalIrregular = $withdrawalData->withdrawal_irregular ?? '';
+        $withdrawalBank = $withdrawalData->withdrawal_bank ?? '';
+        $depositId = $withdrawalData->deposit_id ?? '';
 @endphp
 @endisset
 

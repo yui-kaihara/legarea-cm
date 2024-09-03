@@ -154,8 +154,8 @@ class CashManagementController extends Controller
             ];
             $this->irregularOtherDataService->store($otherRequests);
         }
-
-        return redirect(route('cm.index'))->with('flash_message', '登録が完了しました');
+        
+        $request->session()->flash('flash_message', '登録が完了しました');
     }
 
     /**
@@ -212,7 +212,6 @@ class CashManagementController extends Controller
             $this->irregularSesDataService->store($sesRequests);
             
         } elseif (isset($requests['ses_id'])) {
-            
             $this->irregularSesDataService->update($sesRequests, $requests['ses_id']);
         }
         
@@ -224,7 +223,7 @@ class CashManagementController extends Controller
             'type' => isset($requests['other_type']) ? $requests['other_type'] : null,
             'bank' => isset($requests['other_bank']) ? $requests['other_bank'] : null
         ];
-        if (!isset($requests['other_irregular']) && isset($requests['summary_id'])) {
+        if (!isset($requests['other_irregular'])) {
             $otherRequests['other_data_id'] = $requests['other_id'];
             $this->irregularOtherDataService->store($otherRequests);
             
@@ -232,8 +231,8 @@ class CashManagementController extends Controller
             
             $this->irregularOtherDataService->update($otherRequests, $requests['other_id']);
         }
-
-        return redirect(route('cm.index'))->with('flash_message', '更新が完了しました');
+        
+        $request->session()->flash('flash_message', '更新が完了しました');
     }
 
     /**
@@ -251,54 +250,73 @@ class CashManagementController extends Controller
         $shopIds = explode(',', $requests['shop_id']);
         $sesIds = explode(',', $requests['ses_id']);
         $otherIds = explode(',', $requests['other_id']);
-
+        
         if (isset($requests['delete'])) {
 
             if (in_array('1', $requests['delete']) || in_array('2', $requests['delete'])) {
-                for ($i = 0; $i < $dateCount; $i++) {
-                    $this->shopDataService->destroy($shopIds[$i]);
+                $shopIds = array_filter($shopIds, function($value) {
+                    return $value !== '';
+                });
+                
+                foreach ($shopIds as $shopId) {
+                    $this->shopDataService->destroy((int)$shopId);
                 }
             }
             
             if (in_array('1', $requests['delete']) || in_array('3', $requests['delete'])) {
+                //$sesIds = array_filter($sesIds, function($value) {
+                //    return $value !== '';
+                //});
                 for ($i = 0; $i < $dateCount; $i++) {
                     $sesRequests = [
-                        'date' => $dates[$i],
+                        'date' => $requests['yearmonth'] . '-' . $dates[$i],
                         'company_name' => null,
                         'personnel_name' => null,
                         'type' => null,
-                        'amount' => null,
+                        'amount' => 0,
                         'bank' => null
                     ];
-                    
+
+                    //SES案件から連携されていないデータの場合
                     if ($requests['ses_irregular']) {
                         $this->irregularSesDataService->update($sesRequests, $sesIds[$i]);
-                        
                     } else {
                         $sesRequests['ses_data_id'] = $sesIds[$i];
                         $this->irregularSesDataService->store($sesRequests);
                     }
                 }
+                
+                //取得したID分を削除
+                //foreach ($sesIds as $sesId) {
+                //    $this->irregularSesDataService->destroy((int)$sesId);
+                //}
             }
             
             if (in_array('1', $requests['delete']) || in_array('4', $requests['delete'])) {
+                //$otherIds = array_filter($otherIds, function($value) {
+                //    return $value !== '';
+                //});
+                
                 for ($i = 0; $i < $dateCount; $i++) {
                     $otherRequests = [
-                        'date' => $dates[$i],
+                        'date' => $requests['yearmonth'] . '-' . $dates[$i],
                         'summary_id' => null,
-                        'amount' => null,
+                        'amount' => 0,
                         'type' => null,
                         'bank' => null
                     ];
-                    
                     if ($requests['other_irregular']) {
-                        $this->irregularSesDataService->update($otherRequests, $otherIds[$i]);
-                        
+                        $this->irregularOtherDataService->update($otherRequests, $otherIds[$i]);
                     } else {
                         $otherRequests['other_data_id'] = $otherIds[$i];
-                        $this->irregularSesDataService->store($otherRequests);
+                        $this->irregularOtherDataService->store($otherRequests);
                     }
                 }
+                
+                //取得したID分を削除
+                //foreach ($otherIds as $otherId) {
+                //    $this->irregularOtherDataService->destroy((int)$otherId);
+                //}
             }
         }
         return redirect(route('cm.index'))->with('flash_message', '削除が完了しました');
@@ -328,8 +346,13 @@ class CashManagementController extends Controller
         $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
         $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth); //非定常その他データを取得
         $otherDatas = $otherDatas->union($irregularOtherDatas); //SESデータを結合
+        
+        //実績高データを作成
+        $lastMonth = (($month - 1) !== 0) ? ($month - 1) : 12;
+        $lastMonthYear = ($lastMonth === 12) ? ($year - 1) : $year;
+        $total = $this->balanceDataService->getDetail($lastMonthYear.'-'.sprintf('%02d', $lastMonth));
 
         //Excelダウンロード
-        $this->fileOperateService->download($shopDatas, $sesDatas, $otherDatas, $yearMonth);
+        $this->fileOperateService->download($shopDatas, $sesDatas, $otherDatas, $yearMonth, $total->amount ?? 0);
     }
 }

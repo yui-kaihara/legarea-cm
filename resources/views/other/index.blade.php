@@ -2,7 +2,7 @@
     <x-slot name="header">その他 摘要一覧</x-slot>
     
 @if (session('flash_message'))
-    <p class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
+    <p id="flash-message" class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
         {{ session('flash_message') }}
     </p>
 @endif

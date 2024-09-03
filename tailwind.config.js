@@ -25,7 +25,9 @@ export default {
         'right-2.5',
         'checked:bg-gray-200',
         'checked:hover:bg-gray-200',
-        'w-1/4'
+        'w-1/4',
+        'p-7',
+        'mb-10'
     ],
 
     theme: {

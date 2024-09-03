@@ -134,6 +134,7 @@ const PopupDelete = () => {
                     <form action={formUrl} method="POST">
                         <input type="hidden" name="_token" value={csrfToken.content} />
                         <input type="hidden" name="_method" value="DELETE" />
+                        <input type="hidden" name="yearmonth" value={yearMonth} />
                         <input type="hidden" name="date" value={days} />
                         <input type="hidden" name="shop_id" value={shopIds} />
                         <input type="hidden" name="ses_id" value={sesIds} />

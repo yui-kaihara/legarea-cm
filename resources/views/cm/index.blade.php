@@ -2,7 +2,7 @@
     <x-slot name="header">CM表</x-slot>
 
 @if (session('flash_message'))
-    <p class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
+    <p id="flash-message" class="px-4 py-3 bg-blue-100 text-blue-800 text-center font-semibold text-sm md:text-base">
         {{ session('flash_message') }}
     </p>
 @endif
@@ -128,7 +128,7 @@ $otherIrregularFlag = trim(implode(',', $otherIrregularFlags), "'");
         <table class="w-full border-collapse bg-white">
             <thead class="sticky top-0 left-0 bg-white">
                 <tr class="text-sm font-medium text-gray-600 text-center">
-                    <th class="bg-gray-100"></th>
+                    <th class="bg-gray-100"><input type="checkbox" id="select-all" class="cursor-pointer" /></th>
                     <th class="w-1/12 py-3 border">日付</th>
                     <th colspan="2" class="w-1/6 py-3 border">飲食</th>
                     <th colspan="5" class="w-1/3 py-3 border">SES</th>
@@ -138,8 +138,8 @@ $otherIrregularFlag = trim(implode(',', $otherIrregularFlags), "'");
                 <tr class="text-xs font-medium text-gray-600 text-center">
                     <th class="bg-gray-100"></th>
                     <th class="p-3 border"></th>
-                    <th class="p-3 border">○○店</th>
-                    <th class="p-3 border">○○店</th>
+                    <th class="p-3 border">ゆずの小町</th>
+                    <th class="p-3 border">キヨスグ</th>
                     <th class="p-3 border">会社名</th>
                     <th class="p-3 border">要員名</th>
                     <th class="p-3 border">入金種別</th>
@@ -172,7 +172,7 @@ $otherAmount = 0;
 @endphp
 
                 <tr class="{{ $bgColor }}text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer" /></td>
+                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer row-checkbox" /></td>
                     <td class="p-3 border">{{ $i }}</td>
 
 @if ($shopDatas->has($i) && ($j === 0))
@@ -191,13 +191,21 @@ $shopAmount = $shopDatas[$i]->sales1 + $shopDatas[$i]->sales2;
 @php
 $sesData = $sesDatas[$i][$j]->irregularSesData ?? $sesDatas[$i][$j];
 $sesAmount = (($sesData->type == 1) ? '+' : '-').$sesData->amount;
+$isSesWithdrawal = $sesData->type == 2;
 @endphp
-
-                    <td class="p-3 border">{{ $sesData->company_name }}</td>
-                    <td class="p-3 border">{{ $sesData->personnel_name }}</td>
-                    <td class="p-3 border">{{ config('forms.type')[$sesData->type] }}</td>
-                    <td class="p-3 border">{{ number_format($sesData->amount) }}</td>
-                    <td class="p-3 border">{{ $sesData->bank }}</td>
+    @if ($sesData->amount !== 0)
+                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ $sesData->company_name }}</td>
+                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ $sesData->personnel_name }}</td>
+                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ config('forms.type')[$sesData->type] }}</td>
+                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ number_format($sesData->amount) }}</td>
+                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ $sesData->bank }}</td>
+    @else
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+    @endif
 @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>
@@ -210,12 +218,19 @@ $sesAmount = (($sesData->type == 1) ? '+' : '-').$sesData->amount;
 @php
 $otherData = $otherDatas[$i][$j]->irregularOtherData ?? $otherDatas[$i][$j];
 $otherAmount = (($otherData->type == 1) ? '+' : '-').$otherData->amount;
+$isOtherWithdrawal = $otherData->type == 2;
 @endphp
-
-                    <td class="p-3 border">{{ $otherData->summaryItem[0]->name }}</td>
-                    <td class="p-3 border">{{ number_format($otherData->amount) }}</td>
-                    <td class="p-3 border">{{ config('forms.type')[$otherData->type] }}</td>
-                    <td class="p-3 border">{{ $otherData->bank }}</td>
+    @if ($otherData->amount !== 0)
+                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ $otherData->summaryItem[0]->name }}</td>
+                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ number_format($otherData->amount) }}</td>
+                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ config('forms.type')[$otherData->type] }}</td>
+                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ $otherData->bank }}</td>
+    @else
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+                    <td class="p-3 border"></td>
+    @endif
 @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>

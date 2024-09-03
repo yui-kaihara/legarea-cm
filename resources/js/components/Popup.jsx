@@ -134,10 +134,17 @@ const Popup = ({ id, path }) => {
     };
      
     let [formData, setFormData] = useState(initialFormData);
+    
+    // 数値をカンマ区切りにフォーマットする関数
+    const formatNumber = (number) => {
+        return number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const unformattedValue = value.replace(/,/g, '');
+        const formattedValue = formatNumber(unformattedValue);
+        setFormData({ ...formData, [name]: formattedValue });
     };
 
     //入金種別の配列を用意
@@ -234,12 +241,12 @@ const Popup = ({ id, path }) => {
                             <a href="javascript:void(0);" class="align-text-bottom px-1 border border-gray-400" onClick={clearInputShop}>clear</a>
                             <div className="flex gap-3 mt-2">
                                 <label>
-                                    ○○店
-                                    <input type="number" name="sales1" value={formData.sales1} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    ゆずの小町
+                                    <input type="text" name="sales1" value={formData.sales1} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs"  />
                                 </label>
                                 <label>
-                                    ○○店
-                                    <input type="number" name="sales2" value={formData.sales2} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    キヨスグ
+                                    <input type="text" name="sales2" value={formData.sales2} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
                                 </label>
                             </div>
                         </div>
@@ -270,7 +277,7 @@ const Popup = ({ id, path }) => {
                                 </label>
                                 <label>
                                     金額
-                                    <input type="number" name="ses_amount" value={formData.ses_amount} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="text" name="ses_amount" value={formData.ses_amount} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
                                     {errors.ses_amount && <p class="mt-1 text-red-500">{errors.ses_amount}</p>}
                                 </label>
                                 <label>
@@ -296,7 +303,7 @@ const Popup = ({ id, path }) => {
                                 </label>
                                 <label>
                                     金額
-                                    <input type="number" name="other_amount" value={formData.other_amount} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
+                                    <input type="text" name="other_amount" value={formData.other_amount} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs" />
                                     {errors.other_amount && <p class="mt-1 text-red-500">{errors.other_amount}</p>}
                                 </label>
                                 <label>

@@ -20,7 +20,7 @@ class FileOperateService
      * @param string $yearMonth
      * @return void
      */
-    public function download(Collection $shopDatas, Collection $sesDatas, Collection $otherDatas, string $yearMonth)
+    public function download(Collection $shopDatas, Collection $sesDatas, Collection $otherDatas, string $yearMonth, int $total)
     {
         $spreadsheet = new Spreadsheet();
         
@@ -44,7 +44,7 @@ class FileOperateService
         $sheet->setCellValue('M1', '実残高');
         
         //書き込みデータを準備
-        $writeDatas = [['', '○○店', '○○店', '会社名', '要員名', '入金種別', '金額', '入出金銀行', '摘要', '金額', '入金種別', '入出金銀行', '']];
+        $writeDatas = [['', 'ゆずの小町', 'キヨスグ', '会社名', '要員名', '入金種別', '金額', '入出金銀行', '摘要', '金額', '入金種別', '入出金銀行', '']];
         
         //月の最終日を取得
         $lastDay = new DateTime('last day of '.$yearMonth);
@@ -66,17 +66,20 @@ class FileOperateService
                 
                 //飲食店データ
                 $shopWriteDatas = ['', ''];
+                $shopAmount = 0;
                 if ($shopDatas->has($i) && ($j === 0)) {
-                    
                     $shopWriteDatas = [
                         number_format($shopDatas[$i]->sales1),
                         number_format($shopDatas[$i]->sales2)
                     ];
+                    
+                    $shopAmount = $shopDatas[$i]->sales1 + $shopDatas[$i]->sales2;
                 }
                 $addWriteDatas = array_merge($addWriteDatas, $shopWriteDatas);
                 
                 //SESデータ
                 $sesWriteDatas = ['', '', '', '', ''];
+                $sesAmount = 0;
                 if ($sesDatas->has($i) && ($sesDataCount > $j)) {
                     
                     $sesWriteDatas = [
@@ -86,24 +89,29 @@ class FileOperateService
                         number_format($sesDatas[$i][$j]->amount),
                         $sesDatas[$i][$j]->bank
                     ];
+                    
+                    $sesAmount = (($sesDatas[$i][$j]->type == '1') ? '+' : '-').$sesDatas[$i][$j]->amount;
                 }
                 $addWriteDatas = array_merge($addWriteDatas, $sesWriteDatas);
                 
                 //その他データ
                 $otherWriteDatas = ['', '', '', ''];
+                $otherAmount = 0;
                 if ($otherDatas->has($i) && ($otherDataCount > $j)) {
-                    
                     $otherWriteDatas = [
                         $otherDatas[$i][$j]->summaryItem[0]->name,
                         number_format($otherDatas[$i][$j]->amount),
                         config('forms.type')[$otherDatas[$i][$j]->type],
                         $otherDatas[$i][$j]->bank
                     ];
+                    
+                    $otherAmount = (($otherDatas[$i][$j]->type == '1') ? '+' : '-').$otherDatas[$i][$j]->amount;
                 }
                 $addWriteDatas = array_merge($addWriteDatas, $otherWriteDatas);
-                
+
                 //実残高
-                $writeDatas[] = array_merge($addWriteDatas, [number_format(5000000)]);
+                $total = $total + $shopAmount + $sesAmount + $otherAmount;
+                $writeDatas[] = array_merge($addWriteDatas, [number_format($total)]);
             }
         }
 
