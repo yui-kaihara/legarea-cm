@@ -87,15 +87,20 @@ $sesIrregularFlags = [];
 $otherIds = [];
 $otherIrregularFlags = [];
 for ($i = 0; $i < count($dayParams); $i++) {
+    $shopIds[$i] = 0;
     if ($shopDatas->has($dayParams[$i])) {
         $shopIds[$i] = $shopDatas[$dayParams[$i]]->id;
     }
+    $sesIds[$i] = 0;
+    $sesIrregularFlags[$i] = 0;
     if ($sesDatas->has($dayParams[$i])) {
         if ($sesDatas[$dayParams[$i]]->has($dataParams[$i])) {
             $sesIds[$i] = $sesDatas[$dayParams[$i]][$dataParams[$i]]->id;
             $sesIrregularFlags[$i] = $sesDatas[$dayParams[$i]][$dataParams[$i]]->irregularFlag;
         }
     }
+    $otherIds[$i] = 0;
+    $otherIrregularFlags[$i] = 0;
     if ($otherDatas->has($dayParams[$i])) {
         if ($otherDatas[$dayParams[$i]]->has($dataParams[$i])) {
             $otherIds[$i] = $otherDatas[$dayParams[$i]][$dataParams[$i]]->id;

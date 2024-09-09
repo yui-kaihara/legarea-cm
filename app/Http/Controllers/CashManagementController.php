@@ -267,9 +267,6 @@ class CashManagementController extends Controller
             }
             
             if (in_array('1', $requests['delete']) || in_array('3', $requests['delete'])) {
-                //$sesIds = array_filter($sesIds, function($value) {
-                //    return $value !== '';
-                //});
                 for ($i = 0; $i < $dateCount; $i++) {
                     $sesRequests = [
                         'date' => $requests['yearmonth'] . '-' . $dates[$i],
@@ -288,18 +285,10 @@ class CashManagementController extends Controller
                         $this->irregularSesDataService->store($sesRequests);
                     }
                 }
-                
-                //取得したID分を削除
-                //foreach ($sesIds as $sesId) {
-                //    $this->irregularSesDataService->destroy((int)$sesId);
-                //}
             }
             
             if (in_array('1', $requests['delete']) || in_array('4', $requests['delete'])) {
-                //$otherIds = array_filter($otherIds, function($value) {
-                //    return $value !== '';
-                //});
-                
+
                 for ($i = 0; $i < $dateCount; $i++) {
                     $otherRequests = [
                         'date' => $requests['yearmonth'] . '-' . $dates[$i],
@@ -315,11 +304,6 @@ class CashManagementController extends Controller
                         $this->irregularOtherDataService->store($otherRequests);
                     }
                 }
-                
-                //取得したID分を削除
-                //foreach ($otherIds as $otherId) {
-                //    $this->irregularOtherDataService->destroy((int)$otherId);
-                //}
             }
         }
         return redirect(route('cm.index'))->with('flash_message', '削除が完了しました');
