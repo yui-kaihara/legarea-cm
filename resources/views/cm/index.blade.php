@@ -58,7 +58,7 @@ if ($sesDatas->has($dayParam)) {
             $sesData->type,
             $sesData->amount,
             $sesData->bank,
-            $sesDatas[$dayParam][$dataParam]->irregularSesData ? 1 : 0
+            ($sesDatas[$dayParam][$dataParam]->irregularSesData || $sesDatas[$dayParam][$dataParam]->irregularFlag) ? 1 : 0
         ];
         $sesData = trim(implode(',', $sesData), "'");
     }
@@ -73,7 +73,7 @@ if ($otherDatas->has($dayParam)) {
             $otherData->amount,
             $otherData->type,
             $otherData->bank,
-            $otherDatas[$dayParam][$dataParam]->irregularOtherData ? 1 : 0
+            ($otherDatas[$dayParam][$dataParam]->irregularOtherData || $otherDatas[$dayParam][$dataParam]->irregularFlag) ? 1 : 0
         ];
         $otherData = trim(implode(',', $otherData), "'");
     }

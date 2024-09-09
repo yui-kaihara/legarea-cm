@@ -197,39 +197,42 @@ class CashManagementController extends Controller
             $this->shopDataService->store($shopRequests);
         }
         
-        
         //SESデータ更新
-        $sesRequests = [
-            'date' => $requests['date'],
-            'company_name' => isset($requests['company_name']) ? $requests['company_name'] : null,
-            'personnel_name' => isset($requests['personnel_name']) ? $requests['personnel_name'] : null,
-            'type' => isset($requests['ses_type']) ? $requests['ses_type'] : null,
-            'amount' => isset($requests['ses_amount']) ? $requests['ses_amount'] : null,
-            'bank' => isset($requests['ses_bank']) ? $requests['ses_bank'] : null
-        ];
-        if (!isset($requests['ses_irregular']) && isset($requests['company_name'])) {
-            $sesRequests['ses_data_id'] = $requests['ses_id'];
-            $this->irregularSesDataService->store($sesRequests);
-            
-        } elseif (isset($requests['ses_id'])) {
-            $this->irregularSesDataService->update($sesRequests, $requests['ses_id']);
+        if (isset($requests['company_name'])) {
+            $sesRequests = [
+                'date' => $requests['date'],
+                'company_name' => isset($requests['company_name']) ? $requests['company_name'] : null,
+                'personnel_name' => isset($requests['personnel_name']) ? $requests['personnel_name'] : null,
+                'type' => isset($requests['ses_type']) ? $requests['ses_type'] : null,
+                'amount' => isset($requests['ses_amount']) ? $requests['ses_amount'] : null,
+                'bank' => isset($requests['ses_bank']) ? $requests['ses_bank'] : null
+            ];
+            if (!isset($requests['ses_irregular']) || $requests['ses_irregular'] == 0) {
+                $sesRequests['ses_data_id'] = $requests['ses_id'];
+                $this->irregularSesDataService->store($sesRequests);
+                
+            } elseif ($requests['ses_irregular'] == 1) {
+                $this->irregularSesDataService->update($sesRequests, $requests['ses_id']);
+            }
         }
         
         //その他データ更新
-        $otherRequests = [
-            'date' => $requests['date'],
-            'summary_id' => isset($requests['summary_id']) ? $requests['summary_id'] : null,
-            'amount' => isset($requests['other_amount']) ? $requests['other_amount'] : null,
-            'type' => isset($requests['other_type']) ? $requests['other_type'] : null,
-            'bank' => isset($requests['other_bank']) ? $requests['other_bank'] : null
-        ];
-        if (!isset($requests['other_irregular'])) {
-            $otherRequests['other_data_id'] = $requests['other_id'];
-            $this->irregularOtherDataService->store($otherRequests);
-            
-        } elseif (isset($requests['other_id'])) {
-            
-            $this->irregularOtherDataService->update($otherRequests, $requests['other_id']);
+        if (isset($requests['summary_id'])) {
+            $otherRequests = [
+                'date' => $requests['date'],
+                'summary_id' => isset($requests['summary_id']) ? $requests['summary_id'] : null,
+                'amount' => isset($requests['other_amount']) ? $requests['other_amount'] : null,
+                'type' => isset($requests['other_type']) ? $requests['other_type'] : null,
+                'bank' => isset($requests['other_bank']) ? $requests['other_bank'] : null
+            ];
+            if (!isset($requests['other_irregular']) || $requests['other_irregular'] == 0) {
+                $otherRequests['other_data_id'] = $requests['other_id'];
+                $this->irregularOtherDataService->store($otherRequests);
+                
+            } elseif ($requests['other_irregular'] == 1) {
+                
+                $this->irregularOtherDataService->update($otherRequests, $requests['other_id']);
+            }
         }
         
         $request->session()->flash('flash_message', '更新が完了しました');
