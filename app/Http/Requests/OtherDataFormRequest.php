@@ -47,4 +47,17 @@ class OtherDataFormRequest extends FormRequest
             'in' => 'リストから選択してください'
         ];
     }
+
+    /**
+     * バリデーション前に整形
+     *
+     * @return array
+     */
+    protected function prepareForValidation()
+    {
+        //金額のカンマを削除して数値に変換
+        $this->merge([
+            'amount' => (int)str_replace(',', '', $this->input('amount'))
+        ]);
+    }
 }

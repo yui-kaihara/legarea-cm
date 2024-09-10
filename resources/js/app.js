@@ -5,7 +5,11 @@
  */
 
 import './bootstrap';
-import './FlashMessageAutoDelete'
+import './FlashMessageAutoDelete';
+import { formatNumber } from './FormatNumber';
+
+// 関数をグローバルスコープに追加
+window.formatNumber = formatNumber;
 
 /**
  * Next, we will create a fresh React component instance and attach it to

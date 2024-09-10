@@ -49,7 +49,7 @@ $endMonth = old('end_month');
         <div class="flex items-baseline gap-2 mt-4">
             <label for="amount" class="w-40 text-sm">金額</label>
             <div>
-                <input type="number" name="amount" value="{{ $amount }}" class="w-36 px-4 border-gray-200 rounded-lg" id="amount" /> 円
+                <input type="text" name="amount" value="{{ number_format($amount) }}" oninput="formatNumber(this);" class="w-36 px-4 border-gray-200 rounded-lg" id="amount" /> 円
 @error('amount')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror

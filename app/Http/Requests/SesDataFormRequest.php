@@ -50,4 +50,18 @@ class SesDataFormRequest extends FormRequest
             'in' => 'リストから選択してください'
         ];
     }
+
+    /**
+     * バリデーション前に整形
+     *
+     * @return array
+     */
+    protected function prepareForValidation()
+    {
+        //金額のカンマを削除して数値に変換
+        $this->merge([
+            'deposit_amount' => (int)str_replace(',', '', $this->input('deposit_amount')),
+            'withdrawal_amount' => (int)str_replace(',', '', $this->input('withdrawal_amount'))
+        ]);
+    }
 }
