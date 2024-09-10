@@ -133,7 +133,7 @@ $otherIrregularFlag = trim(implode(',', $otherIrregularFlags), "'");
         <table class="w-full border-collapse bg-white">
             <thead class="sticky top-0 left-0 bg-white">
                 <tr class="text-sm font-medium text-gray-600 text-center">
-                    <th class="bg-gray-100"><input type="checkbox" id="select-all" class="cursor-pointer" /></th>
+                    <th class="bg-gray-100 border-t border-gray-100"><input type="checkbox" id="select-all" class="cursor-pointer" /></th>
                     <th class="w-1/12 py-3 border">日付</th>
                     <th colspan="2" class="w-1/6 py-3 border">飲食</th>
                     <th colspan="5" class="w-1/3 py-3 border">SES</th>
