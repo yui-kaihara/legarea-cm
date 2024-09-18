@@ -171,7 +171,7 @@ class SesData extends Model
                     $status = ($now->format('Y-m') >= $firstPaymentDay->format('Y-m')) ? 7 : 6;
                     
                     //支払予定日
-                    $scheduleDay = config('forms.paymentSite')[$this->deposit_payment_site] - 30;
+                    $scheduleDay = $this->deposit_payment_site ? config('forms.paymentSite')[$this->deposit_payment_site] - 30 : config('forms.paymentSite')[$this->withdrawal_payment_site] - 30;
                     $scheduleDay = new DateTime($this->exit_date->modify('+2 month')->format('Y-m').'-'.$scheduleDay);
             
                     //支払いサイト30日の場合
