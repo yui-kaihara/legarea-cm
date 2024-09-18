@@ -87,7 +87,7 @@ $depositId = '';
         <div class="flex items-baseline gap-2 mt-4">
             <label for="deposit_amount" class="w-40 text-sm">金額</label>
             <div>
-                <input type="text" name="deposit_amount" value="{{ number_format($depositAmount) }}" oninput="formatNumber(this);" class="w-36 px-4 border-gray-200 rounded-lg" id="deposit_amount" /> 円
+                <input type="text" name="deposit_amount" value="{{ $depositAmount ? number_format($depositAmount) : '' }}" oninput="formatNumber(this);" class="w-36 px-4 border-gray-200 rounded-lg" id="deposit_amount" /> 円
 @error('deposit_amount')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
@@ -139,7 +139,7 @@ $depositId = '';
         <div class="flex items-baseline gap-2 mt-4">
             <label for="withdrawal_amount" class="w-40 text-sm">金額</label>
             <div>
-                <input type="text" name="withdrawal_amount" value="{{ number_format($withdrawalAmount) }}" oninput="formatNumber(this);" class="w-36 px-4 border-gray-200 rounded-lg" id="withdrawal_amount" /> 円
+                <input type="text" name="withdrawal_amount" value="{{ $withdrawalAmount ? number_format($withdrawalAmount) : '' }}" oninput="formatNumber(this);" class="w-36 px-4 border-gray-200 rounded-lg" id="withdrawal_amount" /> 円
 @error('withdrawal_amount')
                 <p class="mt-2 text-red-500 text-xs">※{{ $message }}</p>
 @enderror
