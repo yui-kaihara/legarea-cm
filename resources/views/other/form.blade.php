@@ -5,7 +5,7 @@
 <!--予約画面-->
 @php
 $summaryId = old('summary_id');
-$amount = old('amount');
+$amount = old('amount') ? (int)str_replace(',', '', old('amount')) : '';
 $type = old('type');
 $date = old('date');
 $irregular = old('irregular');
