@@ -276,13 +276,16 @@ class CashManagementController extends Controller
                         'amount' => 0,
                         'bank' => null
                     ];
-
-                    //SES案件から連携されていないデータの場合
-                    if ($requests['ses_irregular']) {
-                        $this->irregularSesDataService->update($sesRequests, $sesIds[$i]);
-                    } else {
-                        $sesRequests['ses_data_id'] = $sesIds[$i];
-                        $this->irregularSesDataService->store($sesRequests);
+                    
+                    if ($sesIds[$i]) {
+                        
+                        //SES案件から連携されていないデータの場合
+                        if ($requests['ses_irregular']) {
+                            $this->irregularSesDataService->update($sesRequests, $sesIds[$i]);
+                        } else {
+                            $sesRequests['ses_data_id'] = $sesIds[$i];
+                            $this->irregularSesDataService->store($sesRequests);
+                        }
                     }
                 }
             }
@@ -297,11 +300,14 @@ class CashManagementController extends Controller
                         'type' => null,
                         'bank' => null
                     ];
-                    if ($requests['other_irregular']) {
-                        $this->irregularOtherDataService->update($otherRequests, $otherIds[$i]);
-                    } else {
-                        $otherRequests['other_data_id'] = $otherIds[$i];
-                        $this->irregularOtherDataService->store($otherRequests);
+                    
+                    if ($sesIds[$i]) {
+                        if ($requests['other_irregular']) {
+                            $this->irregularOtherDataService->update($otherRequests, $otherIds[$i]);
+                        } else {
+                            $otherRequests['other_data_id'] = $otherIds[$i];
+                            $this->irregularOtherDataService->store($otherRequests);
+                        }
                     }
                 }
             }
