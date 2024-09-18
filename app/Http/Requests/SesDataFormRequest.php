@@ -60,8 +60,8 @@ class SesDataFormRequest extends FormRequest
     {
         //金額のカンマを削除して数値に変換
         $this->merge([
-            'deposit_amount' => (int)str_replace(',', '', $this->input('deposit_amount')),
-            'withdrawal_amount' => (int)str_replace(',', '', $this->input('withdrawal_amount'))
+            'deposit_amount' => $this->input('deposit_amount') ? (int)str_replace(',', '', $this->input('deposit_amount')) : '',
+            'withdrawal_amount' => $this->input('withdrawal_amount') ? (int)str_replace(',', '', $this->input('withdrawal_amount')) : ''
         ]);
     }
 }

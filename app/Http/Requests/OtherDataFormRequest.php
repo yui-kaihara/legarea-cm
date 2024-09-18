@@ -57,7 +57,7 @@ class OtherDataFormRequest extends FormRequest
     {
         //金額のカンマを削除して数値に変換
         $this->merge([
-            'amount' => (int)str_replace(',', '', $this->input('amount'))
+            'amount' => $this->input('amount') ? (int)str_replace(',', '', $this->input('amount')) : ''
         ]);
     }
 }
