@@ -25,11 +25,11 @@ class SesDataFormRequest extends FormRequest
             'company_name' => ['required'],
             'case_name' => ['required'],
             'personnel_name' => ['required'],
-            'deposit_amount' => ['required'],
+            'deposit_amount' => ['required', 'integer', 'min:0'],
             'deposit_payment_site' => ['required', 'in:1,2,3,4,5,6'],
             'deposit_irregular' => ['required', 'in:1,2'],
             'deposit_bank' => ['required'],
-            'withdrawal_amount' => ['nullable', 'required_with:withdrawal_payment_site,withdrawal_irregular,withdrawal_bank'],
+            'withdrawal_amount' => ['nullable', 'integer', 'min:0', 'required_with:withdrawal_payment_site,withdrawal_irregular,withdrawal_bank'],
             'withdrawal_payment_site' => ['nullable', 'required_with:withdrawal_amount,withdrawal_irregular,withdrawal_bank', 'in:1,2,3,4,5,6'],
             'withdrawal_irregular' => ['nullable', 'required_with:withdrawal_amount,withdrawal_payment_site,withdrawal_bank', 'in:1,2'],
             'withdrawal_bank' => ['nullable', 'required_with:withdrawal_amount,withdrawal_payment_site,withdrawal_irregular'],
@@ -47,7 +47,9 @@ class SesDataFormRequest extends FormRequest
         return [
             'required' => '入力必須です',
             'required_with' => '入力してください',
-            'in' => 'リストから選択してください'
+            'in' => 'リストから選択してください',
+            'integer' => '数値で入力してください',
+            'min' => '0以上の値を入力してください'
         ];
     }
 
