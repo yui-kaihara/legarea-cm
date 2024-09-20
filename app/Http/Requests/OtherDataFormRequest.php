@@ -26,7 +26,7 @@ class OtherDataFormRequest extends FormRequest
 
         return [
             'summary_id' => ['required', 'in:'.implode(',', $summaryItemIds)],
-            'amount' => ['required', 'integer', 'min:0'],
+            'amount' => ['required'],
             'type' => ['required', 'in:1,2'],
             'date' => ['required'],
             'irregular' => ['required', 'in:1,2'],
@@ -44,9 +44,7 @@ class OtherDataFormRequest extends FormRequest
     {
         return [
             'required' => '入力必須です',
-            'in' => 'リストから選択してください',
-            'integer' => '数値で入力してください',
-            'min' => '0以上の値を入力してください'
+            'in' => 'リストから選択してください'
         ];
     }
 
