@@ -137,13 +137,26 @@ const Popup = ({ id, path }) => {
     
     // 数値をカンマ区切りにフォーマットする関数
     const formatNumber = (number) => {
-        return number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        // 入力からカンマとマイナス記号を削除
+        var value = number.replace(/,/g, '').replace(/-/g, '');
+    
+        // 数値かどうかを確認
+        if (!isNaN(value) && value !== '') {
+
+            // 数値であればカンマ区切りでフォーマット
+            var formattedValue = Number(value).toLocaleString();
+
+            // フォーマット済みの数値を返却
+            return formattedValue;
+        }
+        
+        //数値でない場合、空文字を返却
+        return '';
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        const formattedValue = value.replace(/,/g, '');
-        setFormData({ ...formData, [name]: formattedValue });
+        setFormData({ ...formData, [name]: value });
     };
 
     //入金種別の配列を用意
