@@ -200,7 +200,7 @@ class CashManagementController extends Controller
         //SESデータ更新
         if (isset($requests['company_name'])) {
             $sesRequests = [
-                'date' => $requests['date'],
+                'ses_date' => $requests['date'],
                 'company_name' => isset($requests['company_name']) ? $requests['company_name'] : null,
                 'personnel_name' => isset($requests['personnel_name']) ? $requests['personnel_name'] : null,
                 'type' => isset($requests['ses_type']) ? $requests['ses_type'] : null,
