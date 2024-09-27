@@ -64,10 +64,10 @@ class CalcPaymentDayService
     {
         //営業日を設定
         $businessDay = $date;
-        
+
         //祝日を取得
         $holidays = $this->getHolidays();
-        
+
         //土日祝の場合（前or後）
         $sign = ($irregularStatus == 1) ? '-' : '+';
 
@@ -89,7 +89,7 @@ class CalcPaymentDayService
             //休日の場合は前日をチェック
             $date->modify($sign.'1 days');
         }
-        
+
         return $businessDay;
     }
 }

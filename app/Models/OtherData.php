@@ -48,7 +48,9 @@ class OtherData extends Model
     public function getPaymentDayAttribute()
     {
         //支払予定日
-        $scheduleDay = new DateTime(now()->format('Y-m').'-'.$this->date);
+        $year = request()->input('year') ?? now()->format('Y');
+        $month = request()->input('month') ?? now()->format('n');
+        $scheduleDay = new DateTime($year.'-'.$month.'-'.$this->date);
 
         //最終支払日を取得
         $calcPaymentDayService = new CalcPaymentDayService();
