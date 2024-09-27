@@ -95,16 +95,18 @@ for ($i = 0; $i < count($dayParams); $i++) {
     $sesIrregularFlags[$i] = 0;
     if ($sesDatas->has($dayParams[$i])) {
         if ($sesDatas[$dayParams[$i]]->has($dataParams[$i])) {
-            $sesIds[$i] = $sesDatas[$dayParams[$i]][$dataParams[$i]]->id;
-            $sesIrregularFlags[$i] = $sesDatas[$dayParams[$i]][$dataParams[$i]]->irregularFlag;
+            $sesData = $sesDatas[$dayParams[$i]][$dataParams[$i]]->irregularSesData ?? $sesDatas[$dayParams[$i]][$dataParams[$i]];
+            $sesIds[$i] = $sesData->id;
+            $sesIrregularFlags[$i] = $sesData->ses_data_id ? 1 : 0;
         }
     }
     $otherIds[$i] = 0;
     $otherIrregularFlags[$i] = 0;
     if ($otherDatas->has($dayParams[$i])) {
         if ($otherDatas[$dayParams[$i]]->has($dataParams[$i])) {
-            $otherIds[$i] = $otherDatas[$dayParams[$i]][$dataParams[$i]]->id;
-            $otherIrregularFlags[$i] = $otherDatas[$dayParams[$i]][$dataParams[$i]]->irregularFlag;
+            $otherData = $otherDatas[$dayParams[$i]][$dataParams[$i]]->irregularOtherData ?? $otherDatas[$dayParams[$i]][$dataParam[$i]];
+            $otherIds[$i] = $otherData->id;
+            $otherIrregularFlags[$i] = $otherData->other_data_id ? 1 : 0;
         }
     }
 }

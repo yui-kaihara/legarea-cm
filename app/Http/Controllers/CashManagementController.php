@@ -257,12 +257,10 @@ class CashManagementController extends Controller
         if (isset($requests['delete'])) {
 
             if (in_array('1', $requests['delete']) || in_array('2', $requests['delete'])) {
-                $shopIds = array_filter($shopIds, function($value) {
-                    return $value !== '';
-                });
-                
                 foreach ($shopIds as $shopId) {
-                    $this->shopDataService->destroy((int)$shopId);
+                    if ($shopId > 0) {
+                        $this->shopDataService->destroy((int)$shopId);
+                    }
                 }
             }
             
@@ -300,8 +298,8 @@ class CashManagementController extends Controller
                         'type' => null,
                         'bank' => null
                     ];
-                    
-                    if ($sesIds[$i]) {
+
+                    if ($otherIds[$i]) {
                         if ($requests['other_irregular']) {
                             $this->irregularOtherDataService->update($otherRequests, $otherIds[$i]);
                         } else {
@@ -312,7 +310,8 @@ class CashManagementController extends Controller
                 }
             }
         }
-        return redirect(route('cm.index'))->with('flash_message', '削除が完了しました');
+        $yearMonthArray = explode('-', $requests['yearmonth']);
+        return redirect(route('cm.index', ['year' => $yearMonthArray[0], 'month' => $yearMonthArray[1]]))->with('flash_message', '削除が完了しました');
     }
     
     /**

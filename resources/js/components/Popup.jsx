@@ -104,7 +104,8 @@ const Popup = ({ id, path }) => {
         e.preventDefault();
         try {
             await axios.post(formUrl, formData);
-            window.location.href = '/cm';
+            const yearMonth = document.getElementById(id).getAttribute('data-year-month').split('-');
+            window.location.href = '/cm?year='+yearMonth[0]+'&month='+yearMonth[1];
 
         } catch (error) {
             if (error.response && error.response.status === 422) {
