@@ -219,8 +219,8 @@ class SesData extends Model
         $yearMonth = $year.'-'.$month;
         
         $sesData = $this->hasOne(IrregularSesData::class);
-        $sesData->whereYear('date', Carbon::parse($yearMonth)->year);
-        $sesData->whereMonth('date', Carbon::parse($yearMonth)->month);
+        $sesData->whereYear('ses_date', Carbon::parse($yearMonth)->year);
+        $sesData->whereMonth('ses_date', Carbon::parse($yearMonth)->month);
 
         return $sesData;
     }

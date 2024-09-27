@@ -39,7 +39,7 @@ class IrregularSesData extends Model
      * @var array
      */
     protected $casts = [
-        'date' => 'datetime'
+        'ses_date' => 'datetime'
     ];
     
     /*
@@ -48,7 +48,7 @@ class IrregularSesData extends Model
      * @array
      */
     protected $fillable = [
-        'date',
+        'ses_date',
         'company_name',
         'personnel_name',
         'type',
