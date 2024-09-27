@@ -156,7 +156,8 @@ const Popup = ({ id, path }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const formattedValue = value.replace(/,/g, '');
+        setFormData({ ...formData, [name]: formattedValue });
     };
 
     //入金種別の配列を用意
