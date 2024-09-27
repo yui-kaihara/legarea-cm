@@ -18,9 +18,9 @@ class IrregularSesDataService
     public function getList(string $yearMonth)
     {
         $query = IrregularSesData::select('id', 'company_name', 'personnel_name', 'type', 'amount', 'bank');
-        $query->selectRaw('DAY(date) as day');
-        $query->whereYear('date', Carbon::parse($yearMonth)->year);
-        $query->whereMonth('date', Carbon::parse($yearMonth)->month);
+        $query->selectRaw('DAY(ses_date) as day');
+        $query->whereYear('ses_date', Carbon::parse($yearMonth)->year);
+        $query->whereMonth('ses_date', Carbon::parse($yearMonth)->month);
         $query->whereNull('ses_data_id');
         $query->whereNotNull('company_name');
         
