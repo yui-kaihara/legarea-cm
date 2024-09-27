@@ -132,7 +132,7 @@ class CashManagementController extends Controller
         if ($requests['company_name']) {
             
             $sesRequests = [
-                'date' => $date,
+                'ses_date' => $date,
                 'company_name' => $requests['company_name'],
                 'personnel_name' => $requests['personnel_name'],
                 'type' => $requests['ses_type'],
