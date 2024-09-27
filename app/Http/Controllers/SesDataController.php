@@ -141,7 +141,7 @@ class SesDataController extends Controller
         $this->sesDataService->update($depositRequests, $id);
         
         if ($requests['withdrawal_amount']) {
-            
+
             //出金データ
             $withdrawalRequests = [
                 'company_name' => $requests['company_name'],

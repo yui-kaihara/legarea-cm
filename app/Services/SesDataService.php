@@ -87,11 +87,20 @@ class SesDataService
     {
         $sesData = SesData::find($id);
         
+        //$depositIdがある場合は、出金データを取得
         if ($depositId) {
             $sesData = SesData::where('deposit_id', '=', $depositId)->first();
         }
 
-        $sesData->fill($requests)->save();
+        if ($sesData) {
+            $sesData->fill($requests)->save();
+        } else {
+            
+            //出金が登録されていない場合は登録処理
+            $requests['deposit_id'] = $depositId;
+            $this->store($requests);
+        }
+        
     }
     
     /**

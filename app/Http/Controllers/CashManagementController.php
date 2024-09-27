@@ -269,7 +269,7 @@ class CashManagementController extends Controller
             if (in_array('1', $requests['delete']) || in_array('3', $requests['delete'])) {
                 for ($i = 0; $i < $dateCount; $i++) {
                     $sesRequests = [
-                        'date' => $requests['yearmonth'] . '-' . $dates[$i],
+                        'ses_date' => $requests['yearmonth'] . '-' . $dates[$i],
                         'company_name' => null,
                         'personnel_name' => null,
                         'type' => null,
