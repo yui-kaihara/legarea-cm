@@ -77,7 +77,7 @@ class CashManagementController extends Controller
         $otherDatas = $this->otherDataService->getList(TRUE, $yearMonth);
         $irregularOtherDatas = $this->irregularOtherDataService->getList($yearMonth); //非定常その他データを取得
         $otherDatas = $otherDatas->union($irregularOtherDatas); //その他データを結合
-        
+
         //月の最終日を取得
         $lastDay = new DateTime('last day of '.$yearMonth);
 

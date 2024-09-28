@@ -104,8 +104,7 @@ const Popup = ({ id, path }) => {
         e.preventDefault();
         try {
             await axios.post(formUrl, formData);
-            const yearMonth = document.getElementById(id).getAttribute('data-year-month').split('-');
-            window.location.href = '/cm?year='+yearMonth[0]+'&month='+yearMonth[1];
+            window.location.href = '/cm?year=' + yearMonthSplit[0] + '&month=' + yearMonthSplit[1];
 
         } catch (error) {
             if (error.response && error.response.status === 422) {
@@ -171,6 +170,11 @@ const Popup = ({ id, path }) => {
     summaryItemIds.forEach((key, index) => {
         summaryItems[key] = summaryItemNames[index];
     });
+    
+    //チェックされた日付を取得
+    const yearMonth = document.getElementById(id).getAttribute('data-year-month');
+    const yearMonthSplit = yearMonth.split('-');
+    const day = new URLSearchParams(window.location.search).get('day');
 
     //送信ボタンの文言を取得
     const submitText = document.getElementById(id).getAttribute('data-submit-text');
@@ -179,7 +183,7 @@ const Popup = ({ id, path }) => {
     const formUrl = window.location.origin + '/cm' + path;
     
     //キャンセルの遷移先
-    const cancelUrl = window.location.origin + '/cm';
+    const cancelUrl = window.location.origin + '/cm?year=' + yearMonthSplit[0] + '&month=' + yearMonthSplit[1];
     
     //ボタンのアイコンを設定
     let icon = <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="4" y="4" width="16" height="16" rx="2" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>;
@@ -189,10 +193,6 @@ const Popup = ({ id, path }) => {
     
     //日付選択フォーム
     let dateForm = <div className="mb-10"><span className="text-sm font-semibold">日付</span><input type="date" name="date" value={formData.select_date} onChange={handleInputChange} className="block w-36 mt-1 px-4 border-gray-200 rounded-lg text-xs cursor-pointer" /><p class="mt-1 text-red-500">{errors.date}</p></div>;
-
-    //チェックされた日付を取得
-    const yearMonth = document.getElementById(id).getAttribute('data-year-month');
-    const day = new URLSearchParams(window.location.search).get('day');
     
     //飲食店データ取得
     let shopData = document.getElementById(id).getAttribute('data-shop-data').split(',');
@@ -235,6 +235,8 @@ const Popup = ({ id, path }) => {
             });
         }
     }
+    console.log(otherData);
+    console.log(setFormData);
 
     return (
         <div>

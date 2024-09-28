@@ -69,8 +69,8 @@ class FileOperateService
                 $shopAmount = 0;
                 if ($shopDatas->has($i) && ($j === 0)) {
                     $shopWriteDatas = [
-                        number_format($shopDatas[$i]->sales1),
-                        number_format($shopDatas[$i]->sales2)
+                        $shopDatas[$i]->sales1 ? number_format($shopDatas[$i]->sales1) : 0,
+                        $shopDatas[$i]->sales2 ? number_format($shopDatas[$i]->sales2) : 0
                     ];
                     
                     $shopAmount = $shopDatas[$i]->sales1 + $shopDatas[$i]->sales2;
@@ -82,15 +82,18 @@ class FileOperateService
                 $sesAmount = 0;
                 if ($sesDatas->has($i) && ($sesDataCount > $j)) {
                     
-                    $sesWriteDatas = [
-                        $sesDatas[$i][$j]->company_name,
-                        $sesDatas[$i][$j]->personnel_name,
-                        config('forms.type')[$sesDatas[$i][$j]->type],
-                        number_format($sesDatas[$i][$j]->amount),
-                        $sesDatas[$i][$j]->bank
-                    ];
-                    
-                    $sesAmount = (($sesDatas[$i][$j]->type == '1') ? '+' : '-').$sesDatas[$i][$j]->amount;
+                    $sesData = $sesDatas[$i][$j]->irregularSesData ?? $sesDatas[$i][$j];
+                    if ($sesData->amount > 0) {
+                        $sesWriteDatas = [
+                            $sesData->company_name,
+                            $sesData->personnel_name,
+                            config('forms.type')[$sesData->type],
+                            number_format($sesData->amount),
+                            $sesData->bank
+                        ];
+                    }
+
+                    $sesAmount = (($sesData->type == '1') ? '+' : '-').$sesData->amount;
                 }
                 $addWriteDatas = array_merge($addWriteDatas, $sesWriteDatas);
                 
@@ -98,14 +101,18 @@ class FileOperateService
                 $otherWriteDatas = ['', '', '', ''];
                 $otherAmount = 0;
                 if ($otherDatas->has($i) && ($otherDataCount > $j)) {
-                    $otherWriteDatas = [
-                        $otherDatas[$i][$j]->summaryItem[0]->name,
-                        number_format($otherDatas[$i][$j]->amount),
-                        config('forms.type')[$otherDatas[$i][$j]->type],
-                        $otherDatas[$i][$j]->bank
-                    ];
                     
-                    $otherAmount = (($otherDatas[$i][$j]->type == '1') ? '+' : '-').$otherDatas[$i][$j]->amount;
+                    $otherData = $otherDatas[$i][$j]->irregularOtherData ?? $otherDatas[$i][$j];
+                    if ($otherData->amount > 0) {
+                        $otherWriteDatas = [
+                            $otherData->summaryItem[0]->name,
+                            number_format($otherData->amount),
+                            config('forms.type')[$otherData->type],
+                            $otherData->bank
+                        ];
+                    }
+
+                    $otherAmount = (($otherData->type == '1') ? '+' : '-').$otherData->amount;
                 }
                 $addWriteDatas = array_merge($addWriteDatas, $otherWriteDatas);
 
