@@ -176,10 +176,11 @@ if ($sesDataCount || $otherDataCount) {
 $shopAmount = 0;
 $sesAmount = 0;
 $otherAmount = 0;
+$addStyle = ($i == $lastDay) ? ' border-b border-gray-100' : '';
 @endphp
 
                 <tr class="{{ $bgColor }}text-xs text-center">
-                    <td class="p-3 bg-gray-100"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer row-checkbox" /></td>
+                    <td class="p-3 bg-gray-100{{ $addStyle }}"><input type="checkbox" name="date" value="{{ $i }}-{{ $j }}" class="cursor-pointer row-checkbox" /></td>
                     <td class="p-3 border">{{ $i }}</td>
 
 @if ($shopDatas->has($i) && ($j === 0))
