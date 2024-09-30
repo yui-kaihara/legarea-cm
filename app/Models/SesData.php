@@ -97,18 +97,21 @@ class SesData extends Model
     {
         //支払予定日
         $scheduleDay = $this->deposit_payment_site ? config('forms.paymentSite')[$this->deposit_payment_site] - 30 : config('forms.paymentSite')[$this->withdrawal_payment_site] - 30;
-        $scheduleDay = new DateTime(now()->format('Y-m').'-'.$scheduleDay);
-        
+        $year = request()->input('year') ?? now()->format('Y');
+        $month = request()->input('month') ?? now()->format('n');
+        $scheduleDay = new DateTime($year.'-'.$month.'-'.$scheduleDay);
+
         //支払いサイト30日の場合
         if ($this->deposit_payment_site == 1) {
             
             //支払予定日（月の最終日）
-            $scheduleDay = new DateTime('last day of '.now()->format('Y-m'));
+            $scheduleDay = new DateTime('last day of '.$year.'-'.$month);
         }
 
         //最終支払日を取得
+        $irregularStatus = $this->deposit_irregular ?? $this->withdrawal_irregular;
         $calcPaymentDayService = new CalcPaymentDayService();
-        $lastPaymentDay = $calcPaymentDayService->getBusinessDay($scheduleDay)->format('j');
+        $lastPaymentDay = $calcPaymentDayService->getBusinessDay($scheduleDay, $irregularStatus)->format('j');
         
         return $lastPaymentDay;
     }
