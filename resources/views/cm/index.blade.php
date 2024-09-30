@@ -199,14 +199,14 @@ $shopAmount = $shopDatas[$i]->sales1 + $shopDatas[$i]->sales2;
 @php
 $sesData = $sesDatas[$i][$j]->irregularSesData ?? $sesDatas[$i][$j];
 $sesAmount = (($sesData->type == 1) ? '+' : '-').$sesData->amount;
-$isSesWithdrawal = $sesData->type == 2;
+$addSesStyle = ($sesData->type == 2) ? ' text-red-500' : '';
 @endphp
     @if ($sesData->amount !== 0)
-                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ $sesData->company_name }}</td>
-                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ $sesData->personnel_name }}</td>
-                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ config('forms.type')[$sesData->type] }}</td>
-                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ number_format($sesData->amount) }}</td>
-                    <td class="p-3 border {{ $isSesWithdrawal ? 'text-red-500' : '' }}">{{ $sesData->bank }}</td>
+                    <td class="p-3 border{{ $addSesStyle }}">{{ $sesData->company_name }}</td>
+                    <td class="p-3 border{{ $addSesStyle }}">{{ $sesData->personnel_name }}</td>
+                    <td class="p-3 border{{ $addSesStyle }}">{{ config('forms.type')[$sesData->type] }}</td>
+                    <td class="p-3 border{{ $addSesStyle }}">{{ number_format($sesData->amount) }}</td>
+                    <td class="p-3 border{{ $addSesStyle }}">{{ $sesData->bank }}</td>
     @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>
@@ -226,13 +226,13 @@ $isSesWithdrawal = $sesData->type == 2;
 @php
 $otherData = $otherDatas[$i][$j]->irregularOtherData ?? $otherDatas[$i][$j];
 $otherAmount = (($otherData->type == 1) ? '+' : '-').$otherData->amount;
-$isOtherWithdrawal = $otherData->type == 2;
+$addOtherStyle = ($otherData->type == 2) ? ' text-red-500' : '';
 @endphp
     @if ($otherData->amount !== 0)
-                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ $otherData->summaryItem[0]->name }}</td>
-                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ number_format($otherData->amount) }}</td>
-                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ config('forms.type')[$otherData->type] }}</td>
-                    <td class="p-3 border {{ $isOtherWithdrawal ? 'text-red-500' : '' }}">{{ $otherData->bank }}</td>
+                    <td class="p-3 border {{ $addOtherStyle }}">{{ $otherData->summaryItem[0]->name }}</td>
+                    <td class="p-3 border {{ $addOtherStyle }}">{{ number_format($otherData->amount) }}</td>
+                    <td class="p-3 border {{ $addOtherStyle }}">{{ config('forms.type')[$otherData->type] }}</td>
+                    <td class="p-3 border {{ $addOtherStyle }}">{{ $otherData->bank }}</td>
     @else
                     <td class="p-3 border"></td>
                     <td class="p-3 border"></td>
