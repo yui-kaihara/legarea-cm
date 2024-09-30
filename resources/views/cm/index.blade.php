@@ -97,7 +97,7 @@ for ($i = 0; $i < count($dayParams); $i++) {
         if ($sesDatas[$dayParams[$i]]->has($dataParams[$i])) {
             $tempSesData = $sesDatas[$dayParams[$i]][$dataParams[$i]]->irregularSesData ?? $sesDatas[$dayParams[$i]][$dataParams[$i]];
             $sesIds[$i] = $tempSesData->id;
-            $sesIrregularFlags[$i] = $tempSesData->ses_data_id ? 1 : 0;
+            $sesIrregularFlags[$i] = $tempSesData->irregularFlag;
         }
     }
     $otherIds[$i] = 0;
@@ -106,7 +106,7 @@ for ($i = 0; $i < count($dayParams); $i++) {
         if ($otherDatas[$dayParams[$i]]->has($dataParams[$i])) {
             $tempOtherData = $otherDatas[$dayParams[$i]][$dataParams[$i]]->irregularOtherData ?? $otherDatas[$dayParams[$i]][$dataParam[$i]];
             $otherIds[$i] = $tempOtherData->id;
-            $otherIrregularFlags[$i] = $tempOtherData->other_data_id ? 1 : 0;
+            $otherIrregularFlags[$i] = $tempOtherData->irregularFlag;
         }
     }
 }

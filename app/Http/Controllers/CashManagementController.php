@@ -80,13 +80,14 @@ class CashManagementController extends Controller
 
         //月の最終日を取得
         $lastDay = new DateTime('last day of '.$yearMonth);
+        
+        //実残高を更新
+        $this->balanceDataService->update();
 
         //前月の実残高を取得
         $lastMonth = (($month - 1) !== 0) ? ($month - 1) : 12;
         $lastMonthYear = ($lastMonth === 12) ? ($year - 1) : $year;
         $total = $this->balanceDataService->getDetail($lastMonthYear.'-'.sprintf('%02d', $lastMonth));
-
-        $this->balanceDataService->update();
 
         return view('cm.index')->with([
             'summaryItems' => $summaryItems,
@@ -274,7 +275,7 @@ class CashManagementController extends Controller
                         'amount' => 0,
                         'bank' => null
                     ];
-                    
+
                     if ($sesIds[$i]) {
                         
                         //SES案件から連携されていないデータの場合
