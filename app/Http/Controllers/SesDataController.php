@@ -139,7 +139,11 @@ class SesDataController extends Controller
             'deposit_bank' => $requests['deposit_bank']
         ];
         $this->sesDataService->update($depositRequests, $id);
-        
+
+        //出金データ取得
+        $withdrawalData = $this->sesDataService->getWithdrawalDetail($id);
+
+        //出金データの入力がある場合
         if ($requests['withdrawal_amount']) {
 
             //出金データ
@@ -155,6 +159,11 @@ class SesDataController extends Controller
                 'withdrawal_bank' => $requests['withdrawal_bank']
             ];
             $this->sesDataService->update($withdrawalRequests, null, $id);
+
+        } elseif ($withdrawalData) {
+            
+            //出金データの入力がないが登録済みの場合は削除
+            $this->sesDataService->destroy($withdrawalData->id);
         }
 
         return redirect(route('ses.index'))->with('flash_message', '更新が完了しました。');

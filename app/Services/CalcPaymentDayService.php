@@ -85,7 +85,7 @@ class CalcPaymentDayService
                     break;
                 }
             }
-            
+
             //休日の場合は前日をチェック
             $date->modify($sign.'1 days');
         }
